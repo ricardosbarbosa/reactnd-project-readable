@@ -3,7 +3,6 @@ import logo from '../logo.svg';
 import '../App.css';
 import * as ReadApi from '../utils/Api'
 
-
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -21,20 +20,18 @@ class App extends Component {
   }
 
   state = {
-    categories: ["a","b"]
+    categories: ["a","b", "c"]
   }
 
   componentDidMount() {
     console.log("ok")
+    debugger
     ReadApi.categories().then(categories => {
       console.log(categories)
       this.setState({
         categories
       });
     })
-    // this.setState({
-    //   categories: ReadApi.categories()
-    // });
   }
 
   renderErrorMessage() {
@@ -55,7 +52,8 @@ class App extends Component {
   }
 
   render() {
-    const { children, inputValue } = this.props
+    // const { children, inputValue } = this.props
+    const { children } = this.props
     return (
       <div className="App">
         <header className="App-header">
