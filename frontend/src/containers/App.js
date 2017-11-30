@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import '../App.css';
 import * as ReadApi from '../utils/Api'
-
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { resetErrorMessage } from '../actions'
 
 class App extends Component {
@@ -57,19 +55,20 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          
+          <div className="Menubar">
+            <Link to="/" className="menu">Home</Link>
+            {this.state.categories.map( (category, index) => (
+              <Link to="/" key={index} className="menu">{category.name} </Link>
+            ))}
+          </div>
         </header>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         {this.renderErrorMessage()}
         {children}
-        <ol>
-        {this.state.categories.map( (category, index) => (
-          <li key={index} > {category.name} </li>
-        ))}
-        </ol>
+        
       </div>
     );
   }
