@@ -2,19 +2,27 @@
 
 }
 
+.content {
+  display: flex;
+  justify-content: center;
+
+}
+
 .App-header {
   display: flex;
   background-color: #A1233E;
   /*height: 100px; */
   padding: 20px;
+
   color: white;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
 }
 
 .Menubar {
+  width: 800px;
   display: flex;
 }
 
@@ -25,6 +33,79 @@
   font-family: "Avenir Next"; 
   font-size: 20px;  
   font-weight: bold;
+}
+
+.posts {
+  color: red;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  width: 800px;
+  align-self: center;
+  padding: 10px
+}
+
+.post {
+  color: yellow;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  padding: 10px 0px;
+}
+.post .infos{
+  width: 100%;
+}
+.info {
+  
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 10px;  line-height: 15px;
+  /*width: 100%;*/
+}
+.info span {
+  margin-right: 5px;
+}
+.info .tag {
+  color: #A1233E; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;  text-align: center;
+  border-radius: 5px; 
+  background-color: #BACFD4;
+  padding: 0 10px;
+}
+.post .title {
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 36px;  font-weight: bold;  line-height: 49px;
+}
+.comments-count {
+    height: 15px; width: 77px;  color: #A1233E; font-family: "Avenir Next"; font-size: 10px;  line-height: 15px;
+}
+.vote-control {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 15px;  line-height: 20px;  text-align: center;
+  margin-right: 10px;
+}
+.posts .body{
+  margin-left: 55px;
+  color: #A1233E; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;
+}
+
+.comments {
+  color: white;
+  padding: 15px 0px;
+}
+.comment {
+  display: flex;
+  flex-direction: row;
+}
+.comment .text {
+  color: #4B101D; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;
+}
+.menu.active {
+  color: white; 
 }
 
 .Menubar a {

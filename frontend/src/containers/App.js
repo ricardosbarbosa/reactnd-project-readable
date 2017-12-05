@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import '../App.css';
-import * as ReadApi from '../utils/Api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import { resetErrorMessage } from '../actions'
+import Menubar from './Menubar'
+import ListPosts from './ListPosts'
+import Post from './Post'
+import { Route } from 'react-router-dom'
+import * as ReadApi from '../utils/Api'
 
 class App extends Component {
 
@@ -17,20 +21,24 @@ class App extends Component {
     children: PropTypes.node
   }
 
-  state = {
-    categories: ["a","b", "c"]
+  componentDidMount() {
+    // const {addPost, addComment} = this.props
+
+    // ReadApi.posts().then(posts => {
+    //   console.log(posts)
+    //   Promise.all(
+    //     posts.map(post => {
+    //       debugger
+    //       ReadApi.comments(post.id)
+    //         .then(comments => post.comments = comments)
+    //         .then(() => addPost(post))
+          
+    //     })
+    //   )
+        
+    // })
   }
 
-  componentDidMount() {
-    console.log("ok")
-    debugger
-    ReadApi.categories().then(categories => {
-      console.log(categories)
-      this.setState({
-        categories
-      });
-    })
-  }
 
   renderErrorMessage() {
     const { errorMessage } = this.props
@@ -56,16 +64,21 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           
-          <div className="Menubar">
-            <Link to="/" className="menu">Home</Link>
-            {this.state.categories.map( (category, index) => (
-              <Link to="/" key={index} className="menu">{category.name} </Link>
-            ))}
-          </div>
+            <Link to="newpost">NewPost</Link>
+            <Menubar />
+          
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="content">
+          <Route exact path="/posts" component={ListPosts} />
+
+          <Route exact path="/posts/:category" component={ListPosts}  />
+
+          <Route exact path="/posts/new" component={ListPosts} />
+
+          <Route exact path='/post/:post_id' render={({ match }) => (
+            <Post post_id={match.params.post_id}/>
+          )}/>
+        </div>
         {this.renderErrorMessage()}
         {children}
         
@@ -79,6 +92,15 @@ const mapStateToProps = (state, ownProps) => ({
   inputValue: ownProps.location.pathname.substring(1)
 })
 
-export default withRouter(connect(mapStateToProps, {
-  resetErrorMessage
-})(App))
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetErrorMessage: (data) => dispatch(resetErrorMessage(data))
+  }
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps, 
+    mapDispatchToProps
+)(App))

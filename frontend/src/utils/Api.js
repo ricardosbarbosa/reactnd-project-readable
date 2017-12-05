@@ -21,17 +21,32 @@ export const categories = () =>
 export const posts = () =>
   fetch(`${api}/posts`, { headers })
     .then(res => res.json())
-    .then(data => data.posts)
+    .then(data => data)
 
 export const postsBy = (category) =>
   fetch(`${api}/${category}/posts`, { headers })
     .then(res => res.json())
-    .then(data => data.posts)
+    .then(data => data)
 
 export const post = (postId) =>
   fetch(`${api}/posts/${postId}`, { headers })
     .then(res => res.json())
-    .then(data => data.post)
+    .then(data => data)
+
+export const comments = (postId) =>
+  fetch(`${api}/posts/${postId}/comments`, { headers })
+    .then(res => res.json())
+    .then(data => data)
+
+export const update = (book, shelf) =>
+  fetch(`${api}/posts/`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ shelf })
+  }).then(res => res.json())
 
 // export const get = (bookId) =>
 //   fetch(`${api}/books/${bookId}`, { headers })
