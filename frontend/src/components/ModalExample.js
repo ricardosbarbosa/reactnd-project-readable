@@ -12,7 +12,8 @@ class ModalExample extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
-  toggle() {
+  toggle(e) {
+    e.preventDefault()
     this.setState({
       modal: !this.state.modal
     });
@@ -21,16 +22,13 @@ class ModalExample extends React.Component {
   render() {
     return (
       <div>
-        <Link className="new-post" to="newpost" onClick={this.toggle}>{this.props.buttonLabel}</Link>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+        <a className={this.props.className} href="/" onClick={this.toggle}>{this.props.buttonLabel}</a>
+        <Modal isOpen={this.state.modal} toggle={this.toggle} > 
+          <ModalHeader toggle={this.toggle}>{this.props.title}</ModalHeader>
           <ModalBody>
             {this.props.children}
           </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Save</Button>{' '}
-            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-          </ModalFooter>
+          
         </Modal>
       </div>
     );
@@ -38,3 +36,8 @@ class ModalExample extends React.Component {
 }
 
 export default ModalExample;
+
+// <ModalFooter>
+//   <Button color="primary" onClick={this.toggle}>Save</Button>{' '}
+//   <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+// </ModalFooter>

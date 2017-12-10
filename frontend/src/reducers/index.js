@@ -1,6 +1,7 @@
 import * as ActionTypes from '../actions'
 import { combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'
+import 'font-awesome/css/font-awesome.min.css';
 
 // Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
@@ -23,7 +24,7 @@ const category_filter = (state = null, action) => {
   return state
 }
 
-const order_posts_filter = (state = 'most_voted', action) => {
+const order_posts_filter = (state = 'voteScore', action) => {
   const { type, order_posts_filter } = action
   if (type === ActionTypes.CHANGE_ORDER_POSTS_FILTER) {
     return order_posts_filter

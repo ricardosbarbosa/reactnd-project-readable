@@ -7,7 +7,7 @@ import { resetErrorMessage } from '../actions'
 import Menubar from './Menubar'
 import ListPosts from './ListPosts'
 import Post from './Post'
-import { Route } from 'react-router-dom'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
 
 class App extends Component {
@@ -49,15 +49,18 @@ class App extends Component {
           
         </header>
         <div className="content">
-          <Route exact path="/posts" component={ListPosts} />
+          <Switch>
+            <Route exact path="/posts" component={ListPosts} />
 
-          <Route exact path="/posts/:category" component={ListPosts}  />
+            <Route exact path='/posts/:category' render={({ match }) => (
+              <ListPosts category={match.params.category}/>
+            )}/>
+            <Route exact path='/post/:post_id' render={({ match }) => (
+              <Post post_id={match.params.post_id}/>
+            )}/>
 
-          <Route exact path="/posts/new" component={ListPosts} />
-
-          <Route exact path='/post/:post_id' render={({ match }) => (
-            <Post post_id={match.params.post_id}/>
-          )}/>
+            <Redirect from="/" to="/posts"/>
+          </Switch>
         </div>
         {this.renderErrorMessage()}
         {children}

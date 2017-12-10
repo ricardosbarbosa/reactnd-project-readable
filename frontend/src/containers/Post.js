@@ -4,7 +4,7 @@ import * as ReadApi from '../utils/Api'
 import PostHeader from './PostHeader'
 import AddComment from './AddComment'
 import VoteControl from '../components/VoteControl'
-import { addPost, resetPosts, upVoteComment, downVoteComment, deleteComment } from '../actions'
+import { addPost,deletePost, resetPosts, upVoteComment, downVoteComment, deleteComment } from '../actions'
 import * as moment from 'moment'
 class Post extends Component {
 
@@ -37,13 +37,28 @@ class Post extends Component {
     else {
       return ( 
         <div className="posts"> 
-          <PostHeader post={post}/>
           
+          <div className="actions">
+            <a href="#" >Edit</a>
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
+              let {deletePost} = this.props
+              ReadApi.deletePost( post.id)
+                .then(data => {
+                  console.log(data)
+                  deletePost({id: post.id} )
+                })
+              
+            }}>Delete</a>
+          </div>
+          <PostHeader post={post}/>
           <div className="body">
             {post.body}
             <div className="comments">
               <AddComment parentId={post.id}/>
-              {post.comments.filter( c => !c.deleted)
+              {post.comments
+                .filter( c => !c.deleted)
+                .sort((a, b) => a.voteScore < b.voteScore)
                 .map( (comment, index) => (
                 
                 <div key={comment.id} className="comment">
@@ -120,6 +135,7 @@ const mapDispatchToProps = (dispatch) => {
     upVoteComment: (data) => dispatch(upVoteComment(data)),
     downVoteComment: (data) => dispatch(downVoteComment(data)),
     deleteComment: (data) => dispatch(deleteComment(data)),
+    deletePost: (data) => dispatch(deletePost(data)),
   }
 
 }

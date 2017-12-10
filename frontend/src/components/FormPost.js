@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button,  FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import { Button,  FormGroup, Label, Input, FormText, FormFeedback, ModalFooter } from 'reactstrap';
 import * as ReadApi from '../utils/Api'
 import { Field, Form, reduxForm} from 'redux-form'
 import { loadPost, addPost, updatePost } from '../actions'
@@ -59,7 +59,7 @@ class FormPost extends React.Component {
   }
 
   render() {
-    const { handleSubmit, loadPost, pristine, reset, submitting } = this.props
+    const { handleSubmit, loadPost, pristine, reset, submitting, category_filter } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.submit)}>
@@ -70,20 +70,22 @@ class FormPost extends React.Component {
         
         <Field name="body" component={renderField} type="textarea" placeholder="Body" label="Body"/>
 
-        <Field name="category" component={renderFieldSelect} type="select" label="Category">
-          {this.state.categories.map( (category, index) => (
-            <option key={index} value={category.name}>{category.name}</option>
-          ))}
+        <Field name="category" component={renderFieldSelect} type="select" label="Category" value={category_filter}>
+          {this.state.categories.map( (category, index) => {
+            if (category_filter === category.name) {
+              return <option selected key={index} value={category.name} >{category.name}</option>
+            }
+            else {
+              return <option key={index} value={category.name} >{category.name}</option>
+            }
+          })}
         </Field>
 
-        <div>
-          <button type="submit" disabled={pristine || submitting}>
-            Submit
-          </button>
-          <button type="button" disabled={pristine || submitting} onClick={reset}>
-            Undo Changes
-          </button>
-        </div>
+    
+        <ModalFooter>
+          <Button color="primary" disabled={pristine || submitting} type="submit">Save</Button>{' '}
+          <Button color="secondary" disabled={pristine || submitting} onClick={reset}>Undo Changes</Button>
+        </ModalFooter>
 
       </form>
     );
@@ -123,14 +125,12 @@ const renderFieldSelect = ({
 
     <FormGroup>
       <Label for={name}>{label}</Label>
-      <Input type={type} name={name} id={name} {...input} {...custom } >
+      <Input type={type} name={name} id={name} {...input} {...custom } value={value} >
         {children}
       </Input>
     </FormGroup>
   
 )
-
-
 
 
 //Post side validation
@@ -179,7 +179,8 @@ FormPost = reduxForm({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.post
+    initialValues: state.post,
+    category_filter: state.category_filter,
   }
 }
 

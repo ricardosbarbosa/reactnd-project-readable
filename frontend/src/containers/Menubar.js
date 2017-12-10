@@ -25,7 +25,7 @@ class Menubar extends Component {
     const {addPost, category_filter, resetPosts} = this.props
     return (
       <div>
-        <ModalExample buttonLabel="New Post">
+        <ModalExample className="new-post" buttonLabel="New Post" title="Post">
           <FormPost />
         </ModalExample>
         <div className="Menubar">

@@ -14,38 +14,9 @@ class AddComment extends Component {
     let { parentId, addComment, id, authorValue, bodyValue} = this.props
     return (
       <div>
-        <ModalExample buttonLabel="New Post">
-          <FormComment />
+        <ModalExample buttonLabel="New Comment" title="Comment">
+          <FormComment parentId={parentId} />
         </ModalExample>
-        <input ref={node => {
-          author = node
-        }} placeholder='author'/>
-        <input ref={node => {
-          body = node
-        }} placeholder='body'/>
-        <button onClick={(e) => {
-          e.preventDefault()
-
-          let id = uuid().split("-").join("")
-          // debugger
-          ReadApi.addComment(id, author.value, body.value, parentId)
-                      .then(data => {
-                        console.log({ ...data, voteScore: 0})
-                        addComment(
-                          { ...data, 
-                            voteScore: 0,
-                            deleted: false,
-                            parentDeleted: false,
-                          })
-                      })
-                      .catch(error => {
-                        alert(error)
-                      })
-          body.value = ''
-          author.value = ''
-        }}> 
-          Add Comment
-        </button>
       </div>
       )
     

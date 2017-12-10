@@ -55,19 +55,7 @@ class PostHeader extends Component {
           <div className="comments-count">
             {post.commentCount} comments
           </div>
-          <div className="actions">
-            <a href="#" >Edit</a>
-            <a href="#" onClick={(e) => {
-              e.preventDefault();
-              let {deletePost} = this.props
-              ReadApi.deletePost( post.id)
-                .then(data => {
-                  console.log(data)
-                  deletePost({id: post.id} )
-                })
-              
-            }}>Delete</a>
-          </div>
+          
         </div>
       </div>
     )
