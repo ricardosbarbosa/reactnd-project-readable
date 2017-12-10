@@ -21,6 +21,10 @@
   justify-content: center;
 }
 
+.new-post {
+  align-self: start;
+  color: #CFE0DC; font-family: "Avenir Next"; font-size: 15px;  font-weight: bold;  line-height: 20px;  text-align: right;
+}
 .Menubar {
   width: 800px;
   display: flex;
@@ -84,6 +88,7 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: center;
+  width: 40px;
 
   color: #4A4A4A; font-family: "Avenir Next"; font-size: 15px;  line-height: 20px;  text-align: center;
   margin-right: 10px;
@@ -96,10 +101,12 @@
 .comments {
   color: white;
   padding: 15px 0px;
+  width: 100%;
 }
 .comment {
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 .comment .text {
   color: #4B101D; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;
@@ -110,6 +117,15 @@
 
 .Menubar a {
   text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  color: #A1233E; font-family: "Avenir Next"; font-size: 12px;  font-weight: bold;  line-height: 16px;  text-align: right;
+}
+
+.actions a {
+  padding-right: 10px;
 }
 
 .App-intro {

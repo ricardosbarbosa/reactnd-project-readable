@@ -1,5 +1,6 @@
 import * as ActionTypes from '../actions'
 import { combineReducers } from 'redux'
+import { reducer as formReducer } from 'redux-form'
 
 // Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
@@ -74,18 +75,19 @@ const posts = (state = [], action) => {
         return {
           ...post,
           deleted: true,
-          comments: post.comments(comment => {
-            return {
-              ...comment,
-              deleted: true
-            }
-          })
+          comments: post.comments && 
+            post.comments.map(comment => {
+              return {
+                ...comment,
+                parentDeleted: true
+              }
+            })
         }
       })
 
     case ActionTypes.ADD_COMMENT: //id timestamp body author parentId  deleted, parentDeleted, voteScore
       return state.map(post => {
-        if (post.id !== action.id) {
+        if (post.id !== action.parentId) {
           return post
         }
         return {
@@ -109,7 +111,7 @@ const posts = (state = [], action) => {
     
     case ActionTypes.UPDATE_COMMENT: //id
       return state.map(post => {
-        if (post.id !== action.parenteId) {
+        if (post.id !== action.parentId) {
           return post
         }
         return {
@@ -130,7 +132,8 @@ const posts = (state = [], action) => {
 
     case ActionTypes.DELETE_COMMENT: //id
       return state.map(post => {
-        if (post.id !== action.parenteId) {
+        
+        if (post.id !== action.parentId) {
           return post
         }
 
@@ -151,10 +154,10 @@ const posts = (state = [], action) => {
 
     case ActionTypes.UP_VOTE_POST: //id
       return state.map(post => {
+
         if (post.id !== action.id) {
           return post
         }
-
         return {
           ...post,
           voteScore: post.voteScore + 1
@@ -194,6 +197,7 @@ const posts = (state = [], action) => {
       }) 
     case ActionTypes.DOWN_VOTE_COMMENT: //post_id, comment_id
       return state.map(post => {
+
         if (post.id !== action.parentId) {
           return post
         }
@@ -213,6 +217,12 @@ const posts = (state = [], action) => {
         }
       }) 
 
+    // relacionadas ao comportamento
+    case ActionTypes.LOAD_POST:
+      return {
+        post: action.post
+      }
+
     default: 
       return state;
   }
@@ -223,7 +233,8 @@ const rootReducer = combineReducers({
   errorMessage, 
   category_filter,
   order_posts_filter,
-  posts
+  posts,
+  form: formReducer
 })
 
 export default rootReducer

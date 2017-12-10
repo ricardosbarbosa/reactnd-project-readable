@@ -83,33 +83,34 @@ export function deletePost ({ id }) {
 // export const ADD_COMMENT = 'ADD_COMMENT' //id timestamp body author parentId
 // export const UPDATE_COMMENT = 'UPDATE_COMMENT' //id
 // export const DELETE_COMMENT = 'DELETE_COMMENT' //id
-export function addComment({ id, timestamp, body, author, parentId, deleted, parentDeleted, voteScore }) {
+export function addComment({ id, body, author, parentId, voteScore, deleted, parentDeleted }) {
   return {
     type: ADD_COMMENT,
     id, 
-    timestamp, 
     body, 
     author, 
     parentId,
+    voteScore,
     deleted,
-    parentDeleted,
-    voteScore
+    parentDeleted
   }
 }
 
-export function updateComment({ id, timestamp, body, parenteId }) {
+export function updateComment({ id, timestamp, body, parentId }) {
   return {
     type: UPDATE_COMMENT,
     id, 
     timestamp, 
-    body
+    body,
+    parentId,
   }
 }
 
-export function deleteComment({ id, parenteId }) {
+export function deleteComment({ id, parentId }) {
   return {
     type: DELETE_COMMENT,
-    id
+    id,
+    parentId
   }
 }
 
@@ -121,34 +122,45 @@ export function deleteComment({ id, parenteId }) {
 // export const DOWN_VOTE_COMMENT = 'DOWN_VOTE_COMMENT' //post_id, comment_id
 
 
-export function upVotePost({ id, option }) { //"upVote" ou "downVote"
+export function upVotePost({ id }) { 
   return {
     type: UP_VOTE_POST,
-    id,
-    option
+    id
   }
 }
-export function downVotePost({ id, option }) { 
+export function downVotePost({ id }) { 
   return {
     type: DOWN_VOTE_POST,
-    id,
-    option
+    id
   }
 }
-export function upVoteComment({ id, option }) { //"upVote" ou "downVote"
+export function upVoteComment({ id, parentId }) { 
   return {
     type: UP_VOTE_COMMENT,
     id,
-    option
+    parentId
   }
 }
-export function downVoteComment({ id, option }) { 
+export function downVoteComment({ id, parentId }) { 
   return {
     type: DOWN_VOTE_COMMENT,
     id,
-    option
+    parentId
   }
 }
+
+
+// Aqui sao actions relacionadas aos comportamentos
+
+export const LOAD_POST = 'LOAD_POST'
+
+export function loadPost({ post }) { 
+  return {
+    type: LOAD_POST,
+    post
+  }
+}
+
 
 
 

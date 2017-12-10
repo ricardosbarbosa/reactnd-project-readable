@@ -48,6 +48,90 @@ export const update = (book, shelf) =>
     body: JSON.stringify({ shelf })
   }).then(res => res.json())
 
+export const votePost = (postId, option) => {
+  return fetch(`${api}/posts/${postId}`, { 
+    method: "POST",
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ option })
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+export const voteComment = (commentId, option) => {
+  return fetch(`${api}/comments/${commentId}`, { 
+    method: "POST",
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ option })
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+
+export const addPost = (id, timestamp, title, body, author, category) => {
+  return fetch(`${api}/posts`, { 
+    method: "POST",
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      id,
+      title,
+      body,
+      author,
+      category,
+      timestamp
+    })
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+export const addComment = (id, body, author, parentId ) => {
+  return fetch(`${api}/comments`, { 
+    method: "POST",
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      id,
+      parentId,
+      author,
+      body,
+      timestamp: Date.now
+    })
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+export const deleteComment = (commentId) => {
+  return fetch(`${api}/comments/${commentId}`, { 
+    method: "DELETE",
+    headers
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+export const deletePost = (postId) => {
+  return fetch(`${api}/posts/${postId}`, { 
+    method: "DELETE",
+    headers
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
 // export const get = (bookId) =>
 //   fetch(`${api}/books/${bookId}`, { headers })
 //     .then(res => res.json())

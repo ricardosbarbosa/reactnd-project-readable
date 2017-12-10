@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import '../App.css';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { resetErrorMessage } from '../actions'
 import Menubar from './Menubar'
 import ListPosts from './ListPosts'
 import Post from './Post'
 import { Route } from 'react-router-dom'
-import * as ReadApi from '../utils/Api'
+
 
 class App extends Component {
 
@@ -20,25 +20,6 @@ class App extends Component {
     // Injected by React Router
     children: PropTypes.node
   }
-
-  componentDidMount() {
-    // const {addPost, addComment} = this.props
-
-    // ReadApi.posts().then(posts => {
-    //   console.log(posts)
-    //   Promise.all(
-    //     posts.map(post => {
-    //       debugger
-    //       ReadApi.comments(post.id)
-    //         .then(comments => post.comments = comments)
-    //         .then(() => addPost(post))
-          
-    //     })
-    //   )
-        
-    // })
-  }
-
 
   renderErrorMessage() {
     const { errorMessage } = this.props
@@ -64,8 +45,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           
-            <Link to="newpost">NewPost</Link>
-            <Menubar />
+          <Menubar />
           
         </header>
         <div className="content">

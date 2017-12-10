@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import CategoryMenu from './CategoryMenu'
 import Menu from '../components/Menu'
 import * as ReadApi from '../utils/Api'
-import { changeCategoryFilter, resetErrorMessage, addPost, addComment, resetPosts } from '../actions'
-
+import { changeCategoryFilter, addPost, resetPosts } from '../actions'
+// import { Link } from 'react-router-dom'
+import ModalExample from '../components/ModalExample'
+import FormPost from '../components/FormPost'
 class Menubar extends Component {
 
   state = {
@@ -20,25 +22,30 @@ class Menubar extends Component {
   }
 
   render()  {
+    const {addPost, category_filter, resetPosts} = this.props
     return (
+      <div>
+        <ModalExample buttonLabel="New Post">
+          <FormPost />
+        </ModalExample>
         <div className="Menubar">
             <Menu 
-              active={this.props.category_filter === null} 
+              active={category_filter === 'home'} 
               text='Home'
               to={`/posts/`}
               onClick={(e) => {
-                e.preventDefault()
+                // e.preventDefault()
                 //1 muda a categoria na store
-                this.props.changeCategoryFilter({category_filter: null})
-                const {addPost, category_filter, resetPosts} = this.props
+                this.props.changeCategoryFilter({category_filter: 'home'})
+                
                 //2 reset the posts
-                this.props.resetPosts()
+                resetPosts()
                 //3 consulta os posts
                 ReadApi.posts().then(posts => {
                   console.log(posts)
-                  posts.map(post => {
-                    this.props.addPost(post)
-                  })
+                  posts.map(post => 
+                    addPost(post)
+                  )
                 }) 
               }}
             />
@@ -46,6 +53,7 @@ class Menubar extends Component {
               <CategoryMenu filter={category.name} key={index} >{category.name} </CategoryMenu>
             ))}
         </div>
+      </div>
     )
   }
 }

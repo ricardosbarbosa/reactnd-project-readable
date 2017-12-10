@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { changeCategoryFilter, resetErrorMessage, addPost, addComment, resetPosts } from '../actions'
+import { changeCategoryFilter, addPost, resetPosts } from '../actions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import Menu from '../components/Menu'
 import * as ReadApi from '../utils/Api'
 
@@ -24,18 +23,18 @@ class CategoryMenu extends Component {
           text={filter}
           to={`/posts/${filter}`}
           onClick={(e) => {
-            e.preventDefault()
+            // e.preventDefault()
             //1 muda a categoria na store
             changeCategoryFilter({category_filter: filter})
-            const {addPost, category_filter, resetPosts} = this.props
+            const {addPost, resetPosts} = this.props
             //2 reset the posts
             resetPosts()
             //3 consulta os posts
             ReadApi.postsBy(filter).then(posts => {
                 console.log(posts)
-                posts.map(post => {
+                posts.map(post => 
                   addPost(post)
-                })
+                )
               })
             
           }}
