@@ -9,16 +9,22 @@ class ModalPost extends React.Component {
   toggle = (e) => {
     if (e)
       e.preventDefault()
-    console.log(this.props)
+    this.props.toggleModalPost()
+  }
+
+  toggleAndIsNewPost = (e) => {
+    if (e)
+      e.preventDefault()
     this.props.toggleModalPost()
     this.props.isNewPost(true)
   }
+
 
   render() {
     const {parentId, hidden_modal_post} = this.props
     return (
       <div>
-        <a className='new-post' href="/" onClick={this.toggle}>New Post</a>
+        <a className='new-post' href="/" onClick={this.toggleAndIsNewPost}>New Post</a>
         <Modal isOpen={!hidden_modal_post} toggle={this.toggle} > 
           <ModalHeader toggle={this.toggle}>Post</ModalHeader>
           <ModalBody>

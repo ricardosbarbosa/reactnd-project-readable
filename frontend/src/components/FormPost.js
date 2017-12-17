@@ -32,18 +32,18 @@ class FormPost extends React.Component {
   }
 
   render() {
-    const { handleSubmit, pristine, reset, submitting, category_filter, categories } = this.props
+    const { handleSubmit, pristine, reset, submitting, category_filter, categories, isNewPost } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.submit)}>
 
         <Field name="title" component={renderField} type="text" placeholder="Titleeeee" label="Title" />
 
-        <Field name="author" component={renderField} type="text" placeholder="Author" label="Author"/>
+        <Field name="author" component={renderField} type="text" placeholder="Author" label="Author" disabled={!isNewPost}/>
         
         <Field name="body" component={renderField} type="textarea" placeholder="Body" label="Body"/>
 
-        <Field name="category" component={renderFieldSelect} type="select" label="Category" value={category_filter}>
+        <Field name="category" component={renderFieldSelect} type="select" label="Category" value={category_filter} disabled={!isNewPost}>
           {categories.map( (category, index) => {
             if (category_filter === category.name) {
               return <option selected key={index} value={category.name} >{category.name}</option>
@@ -71,12 +71,13 @@ const renderField = ({
   name,
   placeholder,
   value,
+  disabled,
   meta: { touched, error, warning, ...custom}
 }) => (
 
     <FormGroup>
       <Label for={name}>{label}</Label>
-      <Input type={type} name={name} id={name} placeholder={placeholder} {...input} {...custom } />
+      <Input type={type} name={name} id={name} placeholder={placeholder} {...input} {...custom}  disabled={disabled}/>
       {touched &&
         ((error && <FormFeedback>{error}</FormFeedback>) ||
           (warning && <FormText>{warning}</FormText>))}
@@ -92,12 +93,13 @@ const renderFieldSelect = ({
   placeholder,
   value,
   children,
+  disabled,
   meta: { touched, error, warning, ...custom}
 }) => (
 
     <FormGroup>
       <Label for={name}>{label}</Label>
-      <Input type={type} name={name} id={name} {...input} {...custom } value={value} >
+      <Input type={type} name={name} id={name} {...input} {...custom }  disabled={disabled} >
         {children}
       </Input>
     </FormGroup>
@@ -150,10 +152,18 @@ FormPost = reduxForm({
 })(FormPost)
 
 const mapStateToProps = (state, ownProps) => {
+  let initialValues = {}
+  if (state.category_filter) {
+    initialValues = state.isNewPost ? {category: state.category_filter} : state.post
+  }
+  else {
+    initialValues = state.isNewPost ? {category: 'react'} : state.post
+  }
   return {
-    initialValues: state.isNewPost ? {} : state.post,
+    initialValues: initialValues,
     categories: state.categories,
     isNewPost: state.isNewPost,
+    category_filter: state.category_filter,
   }
 }
 

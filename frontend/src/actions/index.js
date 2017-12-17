@@ -65,6 +65,7 @@ export function addPost ({ id, timestamp, title, body, author, category, voteSco
           commentCount,
           comments
         })
+        dispatch({ type: TOGGLE_MODAL_POST})
       })
       .catch(error => {
         alert(error)

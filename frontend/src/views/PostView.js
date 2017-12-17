@@ -4,7 +4,7 @@ import PostHeader from '../components/PostHeader'
 import AddComment from '../containers/AddComment'
 import VoteControl from '../components/VoteControl'
 import Comment from '../components/Comment'
-import {  deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost} from '../actions'
+import {  deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost, isNewPost} from '../actions'
 import * as moment from 'moment'
 import { browserHistory } from 'react-router'
 import { push } from 'react-router-redux'
@@ -13,12 +13,13 @@ import {withRouter} from "react-router-dom";
 class PostView extends Component {
 
   componentDidMount() {
-    const {loadPosts, changeCategoryFilter, match, setPost} = this.props
+    const {loadPosts, changeCategoryFilter, match, setPost, isNewPost} = this.props
     setPost(match.params.post_id)
+    
   }
 
   render()  {
-    const {post, history, location, dispatch, downVotePost, upVotePost, setComment, setPost, deleteComment, deletePost, toggleModalPost} = this.props
+    const {post, history, location, dispatch, downVotePost, upVotePost, setComment, setPost, deleteComment, deletePost, toggleModalPost, match, isNewPost} = this.props
 
     if ( post === null || post === undefined || post.deleted === true ) {
       // history.push("/posts")
@@ -30,7 +31,9 @@ class PostView extends Component {
           <div className="actions">
             <a href="#" onClick={(e) => {
               e.preventDefault();
+              isNewPost(false)
               toggleModalPost()
+              
             }}>Edit</a>
             <a href="#" onClick={(e) => {
               e.preventDefault();
@@ -113,6 +116,7 @@ const mapDispatchToProps = (dispatch) => {
     upVotePost: (data) => dispatch(upVotePost(data)),
     downVotePost: (data) => dispatch(downVotePost(data)),
     setComment: (data) => dispatch(setComment(data)),
+    isNewPost: (data) => dispatch(isNewPost(data)),
   }
 }
 

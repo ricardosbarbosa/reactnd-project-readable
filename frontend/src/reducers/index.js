@@ -87,6 +87,8 @@ const isNewPost = (state = false, action) => {
   switch(action.type) {
     case ActionTypes.IS_NEW_POST: //id
       return action.isNewPost;
+    case ActionTypes.SET_POST: //id
+      return false;
     default: 
       return state;
   }
