@@ -65,23 +65,23 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  color: #4A4A4A; font-family: "Avenir Next"; font-size: 10px;  line-height: 15px;
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 10px;  
   /*width: 100%;*/
 }
 .info span {
   margin-right: 5px;
 }
 .info .tag {
-  color: #A1233E; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;  text-align: center;
+  color: #A1233E; font-family: "Avenir Next"; font-size: 14px;   text-align: center;
   border-radius: 5px; 
   background-color: #BACFD4;
   padding: 0 10px;
 }
 .post .title {
-  color: #4A4A4A; font-family: "Avenir Next"; font-size: 24px;  font-weight: bold;  line-height: 49px;
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 24px;  font-weight: bold; 
 }
 .comments-count {
-    height: 15px; width: 77px;  color: #A1233E; font-family: "Avenir Next"; font-size: 10px;  line-height: 15px;
+    height: 15px; width: 77px;  color: #A1233E; font-family: "Avenir Next"; font-size: 10px;  
 }
 .vote-control {
   display: flex;
@@ -90,12 +90,12 @@
   align-items: center;
   width: 40px;
 
-  color: #4A4A4A; font-family: "Avenir Next"; font-size: 15px;  line-height: 20px;  text-align: center;
+  color: #4A4A4A; font-family: "Avenir Next"; font-size: 15px;   text-align: center;
   margin-right: 10px;
 }
 .posts .body{
   margin-left: 55px;
-  color: #A1233E; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;
+  color: #A1233E; font-family: "Avenir Next"; font-size: 14px; 
 }
 
 .comments {
@@ -107,9 +107,10 @@
   display: flex;
   flex-direction: row;
   width: 100%;
+  padding: 5px;
 }
 .comment .text {
-  color: #4B101D; font-family: "Avenir Next"; font-size: 14px;  line-height: 19px;
+  color: #4B101D; font-family: "Avenir Next"; font-size: 14px; 
 }
 .menu.active {
   color: white; 
@@ -121,7 +122,7 @@
 
 .actions {
   display: flex;
-  color: #A1233E; font-family: "Avenir Next"; font-size: 12px;  font-weight: bold;  line-height: 16px;  text-align: right;
+  color: #A1233E; font-family: "Avenir Next"; font-size: 12px;  font-weight: bold;  text-align: right;
 }
 
 .actions a {

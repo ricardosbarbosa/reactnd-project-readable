@@ -4,7 +4,7 @@ import PostHeader from '../components/PostHeader'
 import AddComment from '../containers/AddComment'
 import VoteControl from '../components/VoteControl'
 import Comment from '../components/Comment'
-import {  deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment} from '../actions'
+import {  deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost} from '../actions'
 import * as moment from 'moment'
 import { browserHistory } from 'react-router'
 import { push } from 'react-router-redux'
@@ -18,8 +18,7 @@ class PostView extends Component {
   }
 
   render()  {
-    const {post, history, location, dispatch, downVotePost, upVotePost} = this.props
-
+    const {post, history, location, dispatch, downVotePost, upVotePost, setComment, setPost, deleteComment, deletePost, toggleModalPost} = this.props
 
     if ( post === null || post === undefined || post.deleted === true ) {
       // history.push("/posts")
@@ -29,10 +28,12 @@ class PostView extends Component {
       return ( 
         <div className="posts"> 
           <div className="actions">
-            <a href="#" >Edit</a>
             <a href="#" onClick={(e) => {
               e.preventDefault();
-              let {deletePost, history} = this.props
+              toggleModalPost()
+            }}>Edit</a>
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
               deletePost({id: post.id} )
               history.push('/')
             }}>Delete</a>
@@ -77,12 +78,10 @@ class PostView extends Component {
                   <Comment comment={comment} 
                       onEditClick={(e) => {
                         e.preventDefault();
-                        const {setComment } = this.props
                         setComment(comment)
                       }}
                       onDeleteClick={(e) => {
                         e.preventDefault();
-                        const {deleteComment, history} = this.props
                         deleteComment({id: comment.id, parentId: comment.parentId} )
                       }}/>
                 </div>
@@ -110,6 +109,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteComment: (data) => dispatch(deleteComment(data)),
     deletePost: (data) => dispatch(deletePost(data)),
     setPost: (data) => dispatch(setPost(data)),
+    toggleModalPost: (data) => dispatch(toggleModalPost(data)),
     upVotePost: (data) => dispatch(upVotePost(data)),
     downVotePost: (data) => dispatch(downVotePost(data)),
     setComment: (data) => dispatch(setComment(data)),

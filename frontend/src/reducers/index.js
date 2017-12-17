@@ -82,10 +82,21 @@ const hidden_modal_comment = (state = true, action) => {
   }
 }
 
+const isNewPost = (state = false, action) => {
+  
+  switch(action.type) {
+    case ActionTypes.IS_NEW_POST: //id
+      return action.isNewPost;
+    default: 
+      return state;
+  }
+}
+
 
 const post = (state = null, action) => {
   
   switch(action.type) {
+
     case ActionTypes.SET_POST: //id
       return action.post;
 
@@ -183,8 +194,18 @@ const post = (state = null, action) => {
             }
           })
         }
-      
-      
+    case ActionTypes.UPDATE_POST: //id, title, body
+        const {title, body} = action
+        if (state.id !== action.id) {
+          return post
+        }
+
+        return {
+          ...state,
+          title,
+          body
+        }
+
     default: 
       return state;
   }
@@ -360,6 +381,7 @@ const rootReducer = combineReducers({
   comment,
   hidden_modal_post,
   hidden_modal_comment,
+  isNewPost,
   form: formReducer
 })
 

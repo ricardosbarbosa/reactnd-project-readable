@@ -11,6 +11,7 @@ export const UPDATE_POST = 'UPDATE_POST' //id, title, body, author, category
 export const DELETE_POST = 'DELETE_POST' //id
 export const LOAD_POSTS = 'LOAD_POSTS'
 export const SET_POST = 'SET_POST'
+export const IS_NEW_POST = 'IS_NEW_POST'
 export const TOGGLE_MODAL_POST = 'TOGGLE_MODAL_POST' //id
 
 //categories
@@ -72,13 +73,14 @@ export function addPost ({ id, timestamp, title, body, author, category, voteSco
   
 }
 
-export function updatePost ({ id, title, body }) {
-  return {
-    type: UPDATE_POST,
-    id,
-    title,
-    body
-  }
+export function updatePost ({ id, title, body}) {
+  return dispatch => {
+    ReadApi.updatePost(id, title, body)
+      .then(data => {
+        dispatch({ type: UPDATE_POST, id, body, title})
+        dispatch({ type: TOGGLE_MODAL_POST})
+      })
+  };
 }
 
 export function deletePost ({ id }) {
@@ -100,6 +102,9 @@ export function deletePost ({ id }) {
 
 export const toggleModalPost = () => ({
     type: TOGGLE_MODAL_POST
+})
+export const isNewPost = (isNewPost) => ({
+    type: IS_NEW_POST, isNewPost
 })
 
 

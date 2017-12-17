@@ -2,7 +2,7 @@ import React from 'react';
 import {  Modal, ModalHeader, ModalBody, } from 'reactstrap';
 import { connect } from 'react-redux'
 import FormPost from './FormPost'
-import { addPost, updatePost, setPost, toggleModalPost} from '../actions'
+import { addPost, updatePost, setPost, toggleModalPost, isNewPost} from '../actions'
 
 class ModalPost extends React.Component {
   
@@ -11,6 +11,7 @@ class ModalPost extends React.Component {
       e.preventDefault()
     console.log(this.props)
     this.props.toggleModalPost()
+    this.props.isNewPost(true)
   }
 
   render() {
@@ -21,7 +22,7 @@ class ModalPost extends React.Component {
         <Modal isOpen={!hidden_modal_post} toggle={this.toggle} > 
           <ModalHeader toggle={this.toggle}>Post</ModalHeader>
           <ModalBody>
-            <FormPost />
+            <FormPost/>
           </ModalBody>
         </Modal>
       </div>
@@ -42,6 +43,7 @@ const mapDispatchToProps = (dispatch) => {
     updatePost: (data) => dispatch(updatePost(data)),
     // resetPost: (data) => dispatch(resetPost(data)),
     setPost: (data) => dispatch(setPost(data)),
+    isNewPost: (data) => dispatch(isNewPost(data)),
     toggleModalPost: (data) => dispatch(toggleModalPost(data)),
   }
 }

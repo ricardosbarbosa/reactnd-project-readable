@@ -23,15 +23,12 @@ class FormPost extends React.Component {
         comments: values.comments || []
     }
 
-    // if(values.id === undefined) {
-    //     this.props.addPost(post)
-    // } else {
-    //     this.props.updatePost(post)
-    // }
+    if(values.id === undefined) {
+        this.props.addPost(post)
+    } else {
+        this.props.updatePost(post)
+    }
 
-    // ({ id, timestamp, title, body, author, category, voteScore, commentCount, comments })
-
-    this.props.addPost(post) 
   }
 
   render() {
@@ -154,8 +151,9 @@ FormPost = reduxForm({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.post,
+    initialValues: state.isNewPost ? {} : state.post,
     categories: state.categories,
+    isNewPost: state.isNewPost,
   }
 }
 
