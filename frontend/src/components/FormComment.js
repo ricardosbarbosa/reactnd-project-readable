@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button, FormGroup, Label, Input, FormText, FormFeedback,ModalFooter } from 'reactstrap';
-import * as ReadApi from '../utils/Api'
 import { Field, Form, reduxForm} from 'redux-form'
-import { loadPost, addComment, updatePost } from '../actions'
+import { addComment, updateComment , setComment} from '../actions'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import { SubmissionError } from 'redux-form'
@@ -18,35 +17,25 @@ class FormComment extends React.Component {
         body: values.body,
         author: values.author,
         parentId: parentId,
-        voteScore: 0,
+        voteScore: 1,
         deleted: false,
         parentDeleted: false
     }
 
-    // if(values.id === undefined) {
-    //     this.props.addPost(post)
-    // } else {
-    //     this.props.updatePost(post)
-    // }
+    if(values.id === undefined) {
+        this.props.addComment({ ...comment})
+    } else {
+        this.props.updateComment({ ...comment})
+    }
 
     // ({ id, timestamp, body, author, parentId })
-   
 
-    const {addComment} = this.props
     
-    // id, body, author, parentId, voteScore, deleted, parentDeleted
-    ReadApi.addComment(comment.id, comment.body, comment.author, comment.parentId, comment.voteScore, comment.deleted, comment.parentDeleted)
-        .then(data => {
-          addComment({ ...data})
-        })
-        .catch(error => {
-          alert(error)
-        })
-      
+    this.props.setComment(null)
   }
 
   render() {
-    const { handleSubmit, loadPost, pristine, reset, submitting, category_filter } = this.props
+    const { handleSubmit, pristine, reset, submitting, category_filter } = this.props
     return (
       <Form onSubmit={handleSubmit(this.submit)}>
         <Field name="author" component={renderField} type="text" placeholder="Author" label="Author"/>
@@ -104,21 +93,21 @@ function validate(values) {
 
 FormComment = reduxForm({
   form: 'commentform', // a unique identifier for this form
-  validate, // <--- validation function given to redux-form
+  // validate, // <--- validation function given to redux-form
   // warn // <--- warning function given to redux-form
 })(FormComment)
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.post,
+    initialValues: state.comment,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadPost: (data) => dispatch(loadPost(data)),
     addComment:  (data) => dispatch(addComment(data)),
-    updatePost: (data) => dispatch(updatePost(data)),
+    updateComment: (data) => dispatch(updateComment(data)),
+    setComment: (data) => dispatch(setComment(data)),
   }
 }
 

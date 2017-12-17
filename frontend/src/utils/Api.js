@@ -114,6 +114,23 @@ export const addComment = (id, body, author, parentId ) => {
   .then(data => data)
 }
 
+export const updateComment = (commentId, body, author, parentId ) => {
+  return fetch(`${api}/comments/${commentId}`, { 
+    method: "PUT",
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      author,
+      body
+    })
+  })
+  .then(res => res.json())
+  .then(data => data)
+}
+
+
 export const deleteComment = (commentId) => {
   return fetch(`${api}/comments/${commentId}`, { 
     method: "DELETE",

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button,  FormGroup, Label, Input, FormText, FormFeedback, ModalFooter } from 'reactstrap';
-import * as ReadApi from '../utils/Api'
 import { Field, Form, reduxForm} from 'redux-form'
-import { loadPost, addPost, updatePost } from '../actions'
+import { addPost, updatePost } from '../actions'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
 import { SubmissionError } from 'redux-form'
@@ -11,17 +10,6 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 class FormPost extends React.Component {
 
-  state = {
-    categories: []
-  }
-
-  componentDidMount() {
-    ReadApi.categories().then(categories => {
-      this.setState({
-        categories
-      });
-    })
-  }
 
   submit = (values) => {
     console.log('Form was submitted!!');
@@ -42,24 +30,12 @@ class FormPost extends React.Component {
     // }
 
     // ({ id, timestamp, title, body, author, category, voteScore, commentCount, comments })
-    debugger
-    console.log(post)
 
-    const {addPost} = this.props
-    // id, timestamp, title, body, author, category
-    ReadApi.addPost(post.id, post.timestamp, post.title, post.body, post.author, post.category)
-        .then(data => {
-          console.log({ ...data, voteScore: 0})
-          addPost({ ...data})
-        })
-        .catch(error => {
-          alert(error)
-        })
-      
+    this.props.addPost(post) 
   }
 
   render() {
-    const { handleSubmit, loadPost, pristine, reset, submitting, category_filter } = this.props
+    const { handleSubmit, pristine, reset, submitting, category_filter, categories } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.submit)}>
@@ -71,7 +47,7 @@ class FormPost extends React.Component {
         <Field name="body" component={renderField} type="textarea" placeholder="Body" label="Body"/>
 
         <Field name="category" component={renderFieldSelect} type="select" label="Category" value={category_filter}>
-          {this.state.categories.map( (category, index) => {
+          {categories.map( (category, index) => {
             if (category_filter === category.name) {
               return <option selected key={index} value={category.name} >{category.name}</option>
             }
@@ -81,7 +57,6 @@ class FormPost extends React.Component {
           })}
         </Field>
 
-    
         <ModalFooter>
           <Button color="primary" disabled={pristine || submitting} type="submit">Save</Button>{' '}
           <Button color="secondary" disabled={pristine || submitting} onClick={reset}>Undo Changes</Button>
@@ -173,20 +148,19 @@ function warn(values) {
 
 FormPost = reduxForm({
   form: 'posform', // a unique identifier for this form
-  validate, // <--- validation function given to redux-form
-  warn // <--- warning function given to redux-form
+  // validate, // <--- validation function given to redux-form
+  // warn // <--- warning function given to redux-form
 })(FormPost)
 
 const mapStateToProps = (state, ownProps) => {
   return {
     initialValues: state.post,
-    category_filter: state.category_filter,
+    categories: state.categories,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadPost: (data) => dispatch(loadPost(data)),
     addPost:  (data) => dispatch(addPost(data)),
     updatePost: (data) => dispatch(updatePost(data)),
   }

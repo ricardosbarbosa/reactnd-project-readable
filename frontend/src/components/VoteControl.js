@@ -7,13 +7,9 @@ class VoteControl extends Component {
     
     return (
         <div className="vote-control">
-       
-          <button className="fa fa-thumbs-o-up upVote" onClick={onUpClick} ></button>
+          <button className="fa fa-thumbs-o-up upVote" onClick={onUpClick} />
           <span className="votes">{voteScore} votes</span>
-          <button className="fa fa-thumbs-o-down  downVote" onClick={onDownClick}>
-			
-          </button>
-          
+          <button className="fa fa-thumbs-o-down  downVote" onClick={onDownClick} />
         </div>
       )
   }

@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { resetErrorMessage } from '../actions'
 import Menubar from './Menubar'
-import ListPosts from './ListPosts'
-import Post from './Post'
+import PostsView from '../views/PostsView'
+import PostView from '../views/PostView'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
 
@@ -50,15 +50,9 @@ class App extends Component {
         </header>
         <div className="content">
           <Switch>
-            <Route exact path="/posts" component={ListPosts} />
-
-            <Route exact path='/posts/:category' render={({ match }) => (
-              <ListPosts category={match.params.category}/>
-            )}/>
-            <Route exact path='/post/:post_id' render={({ match }) => (
-              <Post post_id={match.params.post_id}/>
-            )}/>
-
+            <Route exact path="/posts/" component={PostsView} />
+            <Route exact path="/posts/:category" component={PostsView} />
+            <Route exact path='/post/:post_id' component={PostView} />
             <Redirect from="/" to="/posts"/>
           </Switch>
         </div>
@@ -87,3 +81,7 @@ export default withRouter(
     mapStateToProps, 
     mapDispatchToProps
 )(App))
+
+//<Route exact path='/posts/:category' render={({ match }) => (
+  //            <PostsView category={match.params.category}/>
+    //        )}/>

@@ -19,7 +19,20 @@ const errorMessage = (state = null, action) => {
 const category_filter = (state = null, action) => {
   const { type, category_filter } = action
   if (type === ActionTypes.CHANGE_CATEGORY_FILTER) {
-    return category_filter
+    return category_filter !== undefined ? category_filter : state
+  } 
+  
+  if (type === ActionTypes.SET_POST) {
+    return ''
+  } 
+  
+  return state
+}
+
+const categories = (state = [], action) => {
+  const { type, categories } = action
+  if (type === ActionTypes.LOAD_CATEGORIES) {
+    return categories
   } 
   return state
 }
@@ -32,11 +45,156 @@ const order_posts_filter = (state = 'voteScore', action) => {
   return state
 }
 
+const comment = (state = null, action) => {
+  
+  switch(action.type) {
+    case ActionTypes.RESET_COMMENT: //id
+      return null;
+    case ActionTypes.SET_COMMENT: //id
+      return action.comment;
+    case ActionTypes.SET_POST: //id
+      return null;
+    case ActionTypes.LOAD_POSTS: //id
+      return null;
+    // case ActionTypes.TOGGLE_MODAL_COMMENT: //id
+    //   return null;
+    default: 
+      return state;
+  }
+}
+
+const hidden_modal_post = (state = true, action) => {
+  switch(action.type) {
+    case ActionTypes.TOGGLE_MODAL_POST: //id
+      return !state;
+    default: 
+      return state;
+  }
+}
+
+const hidden_modal_comment = (state = true, action) => {
+  
+  switch(action.type) {
+    case ActionTypes.TOGGLE_MODAL_COMMENT: //id
+      return !state;
+    default: 
+      return state;
+  }
+}
+
+
+const post = (state = null, action) => {
+  
+  switch(action.type) {
+    case ActionTypes.SET_POST: //id
+      return action.post;
+
+    case ActionTypes.LOAD_POSTS: //id
+      return null;
+
+    case ActionTypes.SET_VOTE: //id
+       
+      if (state.id !== action.id) {
+        return state
+      }
+      return {
+        ...state,
+        voteScore: action.voteScore
+      }
+
+    case ActionTypes.SET_VOTE_COMMENT: //id
+      
+        if (state.id !== action.parentId) {
+          return post
+        }
+
+        return {
+          ...state,
+          comments: state.comments.map(comment => {
+            if (comment.id !== action.id) {
+              return comment
+            }
+
+            return {
+              ...comment,
+              voteScore: action.voteScore
+            }
+          })
+        }
+      
+    case ActionTypes.DELETE_COMMENT: //id
+       
+        if (state.id !== action.parentId) {
+          return state
+        }
+        return {
+          ...state,
+          commentCount: state.commentCount - 1,
+          comments: state.comments.map(comment => {
+            if (comment.id !== action.id) {
+              return comment
+            }
+            return {
+              ...comment,
+              deleted: true
+            }
+          })
+        }
+
+      case ActionTypes.ADD_COMMENT: //id
+       
+        if (state.id !== action.parentId) {
+          return post
+        }
+        return {
+          ...state,
+          commentCount: state.commentCount + 1,
+          comments: [
+            ...state.comments,
+            {
+              id: action.id,
+              timestamp: action.timestamp,
+              body: action.body,
+              author: action.author,
+              parentId: action.parentId,
+              voteScore: action.voteScore,
+              deleted: action.deleted,
+              parentDeleted: action.parentDeleted,
+            }
+          ]
+        }
+
+    case ActionTypes.UPDATE_COMMENT: //id
+      
+        if (state.id !== action.parentId) {
+          return post
+        }
+        return {
+          ...state,
+          comments: state.comments.map(comment => {
+            if (comment.id !== action.id) {
+              return comment
+            }
+
+            return {
+              ...comment,
+              author: action.author,
+              body: action.body,
+            }
+          })
+        }
+      
+      
+    default: 
+      return state;
+  }
+}
 
 const posts = (state = [], action) => {
   switch(action.type) {
-    case ActionTypes.RESET_POSTS: //id, timestamp, title, body, author, category
-      return [];
+    case ActionTypes.LOAD_POSTS: //id, timestamp, title, body, author, category
+      return action.posts;
+    
     case ActionTypes.ADD_POST: //id, timestamp, title, body, author, category
       return [
         ...state,
@@ -47,9 +205,9 @@ const posts = (state = [], action) => {
           body: action.body,
           author: action.author,
           category: action.category,
-          commentCount: action.commentCount,
-          voteScore: action.voteScore,
-          comments: action.comments
+          commentCount: 0,
+          voteScore: 1,
+          comments: []
         }
       ];
 
@@ -124,7 +282,7 @@ const posts = (state = [], action) => {
 
             return {
               ...comment,
-              timestamp: action.timestamp,
+              author: action.author,
               body: action.body,
             }
           })
@@ -153,7 +311,7 @@ const posts = (state = [], action) => {
         }
       })
 
-    case ActionTypes.UP_VOTE_POST: //id
+    case ActionTypes.SET_VOTE: //id
       return state.map(post => {
 
         if (post.id !== action.id) {
@@ -161,22 +319,11 @@ const posts = (state = [], action) => {
         }
         return {
           ...post,
-          voteScore: post.voteScore + 1
+          voteScore: action.voteScore
         }
-      }) 
-    case ActionTypes.DOWN_VOTE_POST: //id
-      return state.map(post => {
-        if (post.id !== action.id) {
-          return post
-        }
+      })
 
-        return {
-          ...post,
-          voteScore: post.voteScore - 1
-        }
-      }) 
-
-    case ActionTypes.UP_VOTE_COMMENT: //post_id, comment_id
+    case ActionTypes.SET_VOTE_COMMENT: //id
       return state.map(post => {
         if (post.id !== action.parentId) {
           return post
@@ -191,38 +338,11 @@ const posts = (state = [], action) => {
 
             return {
               ...comment,
-              voteScore: comment.voteScore + 1
+              voteScore: action.voteScore
             }
           })
         }
       }) 
-    case ActionTypes.DOWN_VOTE_COMMENT: //post_id, comment_id
-      return state.map(post => {
-
-        if (post.id !== action.parentId) {
-          return post
-        }
-
-        return {
-          ...post,
-          comments: post.comments.map(comment => {
-            if (comment.id !== action.id) {
-              return comment
-            }
-
-            return {
-              ...comment,
-              voteScore: comment.voteScore - 1
-            }
-          })
-        }
-      }) 
-
-    // relacionadas ao comportamento
-    case ActionTypes.LOAD_POST:
-      return {
-        post: action.post
-      }
 
     default: 
       return state;
@@ -232,9 +352,14 @@ const posts = (state = [], action) => {
 
 const rootReducer = combineReducers({
   errorMessage, 
-  category_filter,
+  category_filter, 
+  categories,
   order_posts_filter,
   posts,
+  post,
+  comment,
+  hidden_modal_post,
+  hidden_modal_comment,
   form: formReducer
 })
 
