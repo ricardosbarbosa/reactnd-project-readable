@@ -1,12 +1,48 @@
 import { createSelector } from 'reselect'
 
+const getCategoryFilter = (state) => state.category_filter
 const getOrderByFilter = (state) => state.order_posts_filter
 const getPosts = (state) => state.posts
+const getPost = (state) => state.post
+const getFavorites = (state) => state.favorites
+const getReadingList = (state) => state.readingLater
 
 export const getVisiblePosts = createSelector(
-  [ getPosts ],
-  ( posts) => {
-    return posts.filter((post) => !post.deleted)
+  [ getPosts, getFavorites, getReadingList, getCategoryFilter],
+  ( posts, favorites, readingList, category_filter) => {
+    const idsFavorites = favorites.map(p => {return p.id})
+    const idsReading = readingList.map(p => {return p.id})
+
+    if (category_filter === 'favorites') {
+      return favorites.map(p => { return { ...p, favorite: true, reading: idsReading.indexOf(p.id) > -1 }})
+    }
+    if (category_filter === 'reading-list') {
+      return readingList.map(p => { return { ...p, favorite: idsFavorites.indexOf(p.id) > -1 , reading: true }})
+    }
+
+    
+    return posts.filter((post) => !post.deleted).map(p => { return {
+      ...p, 
+      favorite: idsFavorites.indexOf(p.id) > -1 ,
+      reading: idsReading.indexOf(p.id) > -1 
+    }})
+  }
+)
+
+
+export const getVisiblePost = createSelector(
+  [ getPost, getFavorites, getReadingList, getCategoryFilter],
+  ( post, favorites, readingList, category_filter) => {
+    if (!post) return 
+      
+    const idsFavorites = favorites.map(p => {return p.id})
+    const idsReading = readingList.map(p => {return p.id})
+
+    return {
+      ...post, 
+      favorite: idsFavorites.indexOf(post.id) > -1 ,
+      reading: idsReading.indexOf(post.id) > -1 
+    }
   }
 )
 

@@ -4,9 +4,10 @@ import PostHeader from '../components/PostHeader'
 import ModalComment from '../components/ModalComment'
 import Comment from '../components/Comment'
 import PostHeaderContainer from '../containers/PostHeaderContainer'
-import { deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost, isNewPost} from '../actions'
+import { deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost, isNewPost, favorite, reading} from '../actions'
 import {withRouter} from "react-router-dom";
 import { compose } from 'redux'
+import { getVisiblePost } from '../selectors'
 
 class PostView extends Component {
 
@@ -16,7 +17,7 @@ class PostView extends Component {
   }
 
   render()  {
-    const {post, history, downVotePost, upVotePost, setComment, deleteComment, deletePost, toggleModalPost, isNewPost} = this.props
+    const {post, history, downVotePost, upVotePost, setComment, deleteComment, deletePost, toggleModalPost, isNewPost, favorite, reading} = this.props
 
     if ( post === null || post === undefined || post.deleted === true ) {
       // history.push("/posts")
@@ -33,14 +34,12 @@ class PostView extends Component {
             <div className="comments">
               <ModalComment parentId={post.id}/>
               
-              {post.comments
+              {post && post.comments && post.comments
                 .filter( c => !c.deleted)
                 .sort((a, b) => a.voteScore < b.voteScore)
                 .map( (comment, index) => (
                 
-                
-                  
-                  <Comment key={comment.id}
+                <Comment key={comment.id}
                     comment={comment} 
                     onUpClick={(e) => {
                       e.preventDefault()
@@ -57,7 +56,8 @@ class PostView extends Component {
                     onDeleteClick={(e) => {
                       e.preventDefault();
                       deleteComment({id: comment.id, parentId: comment.parentId} )
-                    }}/>
+                    }}
+                  />
                 
 
               ))}
@@ -72,7 +72,7 @@ class PostView extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    post: state.post
+    post: getVisiblePost(state),
   }
 }
 

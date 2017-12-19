@@ -55,7 +55,6 @@ class PostsView extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    // posts: state.posts.filter((post) => !post.deleted).sort((a, b) => a[ownProps.order_posts_filter] < b[ownProps.order_posts_filter]),
     posts: getVisiblePostsOrderedBy(state),
     categories: state.categories,
     order_posts_filter: state.order_posts_filter,

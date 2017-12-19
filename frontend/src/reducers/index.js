@@ -5,25 +5,62 @@ import 'font-awesome/css/font-awesome.min.css';
 
 // Extras
 const favorites = (state = [], action) => {
-  switch(action.type) {
-    case ActionTypes.ADD_TO_FAVORITE: 
-      return state;
-    case ActionTypes.REMOVE_FROM_FAVORITE: 
-      return state;
-    default: 
-      return state;
-  }
+    const ids = state.map( favorite => { return favorite.id })
+    const index = action && action.post && ids.indexOf(action.post.id)
+    switch(action.type) {
+      case ActionTypes.FAVORITE: //id, timestamp, title, body, author, category
+        if (index > -1) {
+          return [
+            ...state.slice(0, index),
+            ...state.slice(index + 1)
+          ];
+        }
+        else {
+          return [
+            ...state,
+            action.post
+          ];
+        }
+
+      case ActionTypes.REMOVE_FROM_FAVORITE: //id
+       return [
+          ...state.slice(0, index),
+          ...state.slice(index + 1)
+        ];
+        
+      default: 
+        return state;
+    }
 }
 
 const readingLater = (state = [], action) => {
-  switch(action.type) {
-    case ActionTypes.ADD_TO_READING_LATER: 
-      return state;
-    case ActionTypes.REMOVE_FROM_READING_LATER: 
-      return state;
-    default: 
-      return state;
-  }
+    const ids = state.map( reading_post => { return reading_post.id })
+    const index = action && action.post && ids.indexOf(action.post.id)
+    switch(action.type) {
+      case ActionTypes.READING_LIST: //id, timestamp, title, body, author, category
+        if (index > -1) {
+          return [
+            ...state.slice(0, index),
+            ...state.slice(index + 1)
+          ];
+        }
+        else {
+          return [
+            ...state,
+            action.post
+          ];
+        }
+        
+
+      case ActionTypes.REMOVE_FROM_READING_LIST: //id
+        return [
+          ...state.slice(0, index),
+          ...state.slice(index + 1)
+        ];
+        
+      default: 
+        return state;
+    }
 }
 
 // Updates error message to notify about the failed fetches.
@@ -79,8 +116,6 @@ const comment = (state = null, action) => {
       return null;
     case ActionTypes.LOAD_POSTS: //id
       return null;
-    // case ActionTypes.TOGGLE_MODAL_COMMENT: //id
-    //   return null;
     default: 
       return state;
   }
@@ -136,6 +171,26 @@ const post = (state = null, action) => {
           ...state,
           voteScore: action.voteScore
         }
+
+    case ActionTypes.FAVORITE:
+      if (state && state.id !== action.post.id) {
+        return state
+      }
+
+      return {
+        ...state,
+        favorite: state && state.favorite ? true : !post.favorite
+      }
+    
+    case ActionTypes.READING_LIST:
+      if (state && state.id !== action.post.id) {
+        return state
+      }
+
+      return {
+        ...state,
+        favorite: state && state.reading ? true : !post.reading
+      }
 
     case ActionTypes.SET_VOTE_COMMENT: //id
       
@@ -238,6 +293,8 @@ const post = (state = null, action) => {
 
 const posts = (state = [], action) => {
   switch(action.type) {
+     
+
     case ActionTypes.LOAD_POSTS: //id, timestamp, title, body, author, category
       return action.posts
     
@@ -311,6 +368,33 @@ const posts = (state = [], action) => {
         return {
           ...post,
           commentCount: post.commentCount - 1
+        }
+      })
+
+
+    case ActionTypes.FAVORITE:
+      return state.map(post => {
+        
+        if (post.id !== action.id) {
+          return post
+        }
+
+        return {
+          ...post,
+          favorite: post.favorite ? true : !post.favorite
+        }
+      })
+
+    case ActionTypes.READING_LIST:
+      return state.map(post => {
+        
+        if (post.id !== action.id) {
+          return post
+        }
+
+        return {
+          ...post,
+          favorite: post.reading ? true : !post.reading
         }
       })
 

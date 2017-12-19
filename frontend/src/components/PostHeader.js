@@ -12,10 +12,10 @@ class PostHeader extends Component {
         <VoteControl voteScore={post.voteScore} onDownClick={onDownClick} onUpClick={onUpClick}/>
         <div className="infos">
           <div className="actions">
-            <a href="#" onClick={onEditClick}>Edit</a>
-            <a href="#" onClick={onDeleteClick}>Delete</a>
-            <a className="fa fa-star-o" onClick={onFavoriteClick}/>
-            <a className="fa fa-bookmark-o" onClick={onReadLaterClick}/>
+            <a onClick={onEditClick}>Edit</a>
+            <a onClick={onDeleteClick}>Delete</a>
+            <a className={post.favorite ? `fa fa-star`: `fa fa-star-o`} onClick={onFavoriteClick}/>
+            <a className={post.reading ? `fa fa-bookmark`: `fa fa-bookmark-o`} onClick={onReadLaterClick}/>
           </div>
           <div className="info">
             <span>{post.author} - {moment(post.timestamp).fromNow()}</span>

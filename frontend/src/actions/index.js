@@ -2,9 +2,9 @@ import * as ReadApi from '../utils/Api'
 
 //Extras
 export const REMOVE_FROM_FAVORITE = "REMOVE_FROM_FAVORITE"
-export const REMOVE_FROM_READING_LATER = "REMOVE_FROM_READING_LATER"
-export const ADD_TO_FAVORITE = "ADD_TO_FAVORITE"
-export const ADD_TO_READING_LATER = "ADD_TO_READING_LATER"
+export const REMOVE_FROM_READING_LIST = "REMOVE_FROM_READING_LIST"
+export const FAVORITE = "FAVORITE"
+export const READING_LIST = "READING_LIST"
 
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
 
@@ -35,24 +35,24 @@ export const SET_VOTE = 'SET_VOTE' //id
 export const SET_VOTE_COMMENT = 'SET_VOTE_COMMENT' //id
 
 //extras
-export const addToFavorite = (post) => ({
-  type: ADD_TO_FAVORITE,
+export const favorite = (post) => ({
+  type: FAVORITE,
   post
 })
 
-export const removeFromFavorite = (post) => ({
+export const removeFromFavorite = (id) => ({
   type: REMOVE_FROM_FAVORITE,
+  id
+})
+
+export const reading = (post) => ({
+  type: READING_LIST,
   post
 })
 
-export const addToReadingLater = (post) => ({
-  type: ADD_TO_READING_LATER,
-  post
-})
-
-export const removeFromReadingLater = (post) => ({
-  type: REMOVE_FROM_READING_LATER,
-  post
+export const removeFromReadingLater = (id) => ({
+  type: REMOVE_FROM_READING_LIST,
+  id
 })
 
 // Resets the currently visible error message.
@@ -115,6 +115,8 @@ export function deletePost ({ id }) {
     ReadApi.deletePost(id)
       .then(data => {
         dispatch({ type: DELETE_POST, id})
+        dispatch({ type: REMOVE_FROM_FAVORITE, id })
+        dispatch({ type: REMOVE_FROM_READING_LIST, id })
       })
   };
 }
