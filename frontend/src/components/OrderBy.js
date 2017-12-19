@@ -6,7 +6,7 @@ class OrderBy extends Component {
     const { value, onChangeClick, options } = this.props;
     return (
       <div>
-        <select id="role" name="role" class="form-control" value={value} onChange={onChangeClick}>
+        <select id="role" name="role" className="form-control" value={value} onChange={onChangeClick}>
             {options.map( option =>(
               <option value={option.value}>{option.name}</option>
             ))}

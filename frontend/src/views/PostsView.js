@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import PostHeader from '../components/PostHeader'
+import PostHeaderContainer from '../containers/PostHeaderContainer'
 import OrderBy from '../components/OrderBy'
 import { changeCategoryFilter, changeOrderPostsFilter, upVotePost, downVotePost, loadPosts, toggleModalPost, deletePost, isNewPost, setPost} from '../actions'
 import { compose } from 'redux'
@@ -35,40 +35,19 @@ class PostsView extends Component {
     const {posts, order_posts_filter, changeOrderPostsFilter, upVotePost, downVotePost, history, isNewPost, deletePost, toggleModalPost,setPost} = this.props
     return (
         <div className="postss">
-        
-          <OrderBy 
-            value={order_posts_filter}
-            options={[{name: 'Vote Score', value: 'voteScore'},{name: 'Created at', value: 'timestamp'}]}
-            onChangeClick={(event) => {changeOrderPostsFilter({order_posts_filter: event.target.value}) }}
-          />
+          <OrderBy value={order_posts_filter}
+            options={[
+                  {name: 'Vote Score', value: 'voteScore'},
+                  {name: 'Created at', value: 'timestamp'},
+                  {name: 'Most commented', value: 'commentCount'},
+                ]}
+            onChangeClick={(event) => {changeOrderPostsFilter({order_posts_filter: event.target.value}) }}/>
+          
           <div className="posts">
-            {posts.map( (post) => (
-              <PostHeader 
-                key={post.id} 
-                post={post} 
-                onDeleteClick={(e) => {
-                    e.preventDefault();
-                    deletePost({id: post.id} )
-                    history.push('/')
-                  }} 
-                onEditClick={(e) => {
-                  e.preventDefault();
-                  setPost(post.id)
-                  isNewPost(false)
-                  toggleModalPost()
-                }}
-                onUpClick={(e) => {
-                  e.preventDefault()
-                  upVotePost({id: post.id} )
-                }} 
-                onDownClick={(e) => {
-                  e.preventDefault()
-                  downVotePost({id: post.id} )
-                }}
-                />
+            {posts && posts.map( (post) => (
+              <PostHeaderContainer post={post} />
             ))}
           </div>
-         
         </div>
     )
   }

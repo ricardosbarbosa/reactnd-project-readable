@@ -1,5 +1,11 @@
 import * as ReadApi from '../utils/Api'
 
+//Extras
+export const REMOVE_FROM_FAVORITE = "REMOVE_FROM_FAVORITE"
+export const REMOVE_FROM_READING_LATER = "REMOVE_FROM_READING_LATER"
+export const ADD_TO_FAVORITE = "ADD_TO_FAVORITE"
+export const ADD_TO_READING_LATER = "ADD_TO_READING_LATER"
+
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
 
 export const CHANGE_CATEGORY_FILTER = 'CHANGE_CATEGORY_FILTER'
@@ -28,6 +34,26 @@ export const TOGGLE_MODAL_COMMENT = 'TOGGLE_MODAL_COMMENT' //id
 export const SET_VOTE = 'SET_VOTE' //id
 export const SET_VOTE_COMMENT = 'SET_VOTE_COMMENT' //id
 
+//extras
+export const addToFavorite = (post) => ({
+  type: ADD_TO_FAVORITE,
+  post
+})
+
+export const removeFromFavorite = (post) => ({
+  type: REMOVE_FROM_FAVORITE,
+  post
+})
+
+export const addToReadingLater = (post) => ({
+  type: ADD_TO_READING_LATER,
+  post
+})
+
+export const removeFromReadingLater = (post) => ({
+  type: REMOVE_FROM_READING_LATER,
+  post
+})
 
 // Resets the currently visible error message.
 export const resetErrorMessage = () => ({
@@ -217,8 +243,6 @@ export function setPost(id) {
     return dispatch => {
       ReadApi.post(id)
       .then(post => {
-        console.log('iajsiasuisuais')
-        console.log(post)
         if (post.id !== undefined ) {
             ReadApi.comments(post.id)
               .then(comments => {
@@ -236,6 +260,13 @@ export function setPost(id) {
 
 export function loadPosts(category) {
   if (category === null || category === undefined) {
+    return dispatch => {
+      ReadApi.posts().then(posts =>
+          dispatch({ type: LOAD_POSTS, posts })
+      );
+    };
+  }
+  else if (category === 'favorites' || category === 'reading-list') {
     return dispatch => {
       ReadApi.posts().then(posts =>
           dispatch({ type: LOAD_POSTS, posts })

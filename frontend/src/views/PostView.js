@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PostHeader from '../components/PostHeader'
 import ModalComment from '../components/ModalComment'
 import Comment from '../components/Comment'
+import PostHeaderContainer from '../containers/PostHeaderContainer'
 import { deletePost, upVoteComment, downVoteComment, deleteComment, setPost,upVotePost, downVotePost, setComment, toggleModalPost, isNewPost} from '../actions'
 import {withRouter} from "react-router-dom";
 import { compose } from 'redux'
@@ -25,26 +26,7 @@ class PostView extends Component {
       return ( 
         <div className="posts"> 
           
-          <PostHeader post={post} 
-            onDeleteClick={(e) => {
-              e.preventDefault();
-              deletePost({id: post.id} )
-              history.push('/')
-            }} 
-            onEditClick={(e) => {
-              e.preventDefault();
-              isNewPost(false)
-              toggleModalPost()
-            }}
-            onUpClick={(e) => {
-              e.preventDefault()
-              upVotePost({id: post.id} )
-            }} 
-            onDownClick={(e) => {
-              e.preventDefault()
-              downVotePost({id: post.id} )
-            }}
-          />
+          <PostHeaderContainer post={post} />
 
           <div className="body">
             {post.body}

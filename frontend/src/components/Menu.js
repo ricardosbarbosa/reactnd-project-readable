@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom'
 class Menu extends Component {
 
   render()  {
-    const { text, active, to, onClick } = this.props;
+    const { children, active, to, onClick } = this.props;
     
     if (active) {
-      return <span className="menu active">{text}</span>
+      return <span className="menu active">{children}</span>
     }
     else {
       return (
-        <Link to={to} className="menu" onClick={onClick} >{text}</Link>
+        <Link to={to} className="menu" onClick={onClick} >{children}</Link>
       )
     }
   }

@@ -5,7 +5,7 @@ import VoteControl from '../components/VoteControl'
 
 class PostHeader extends Component {
   render()  {
-    const {post, onEditClick, onDeleteClick, onDownClick, onUpClick} = this.props;
+    const {post, onEditClick, onDeleteClick, onDownClick, onUpClick, onReadLaterClick, onFavoriteClick} = this.props;
     
     return (
       <div className="post"> 
@@ -14,6 +14,8 @@ class PostHeader extends Component {
           <div className="actions">
             <a href="#" onClick={onEditClick}>Edit</a>
             <a href="#" onClick={onDeleteClick}>Delete</a>
+            <a className="fa fa-star-o" onClick={onFavoriteClick}/>
+            <a className="fa fa-bookmark-o" onClick={onReadLaterClick}/>
           </div>
           <div className="info">
             <span>{post.author} - {moment(post.timestamp).fromNow()}</span>

@@ -3,6 +3,29 @@ import { combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'
 import 'font-awesome/css/font-awesome.min.css';
 
+// Extras
+const favorites = (state = [], action) => {
+  switch(action.type) {
+    case ActionTypes.ADD_TO_FAVORITE: 
+      return state;
+    case ActionTypes.REMOVE_FROM_FAVORITE: 
+      return state;
+    default: 
+      return state;
+  }
+}
+
+const readingLater = (state = [], action) => {
+  switch(action.type) {
+    case ActionTypes.ADD_TO_READING_LATER: 
+      return state;
+    case ActionTypes.REMOVE_FROM_READING_LATER: 
+      return state;
+    default: 
+      return state;
+  }
+}
+
 // Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
   const { type, error } = action
@@ -100,20 +123,19 @@ const post = (state = null, action) => {
   switch(action.type) {
 
     case ActionTypes.SET_POST: //id
-      return action.post;
+        return action.post;
 
     case ActionTypes.LOAD_POSTS: //id
-      return null;
+        return null;
 
     case ActionTypes.SET_VOTE: //id
-       
-      if (state && state.id && state.id !== action.id) {
-        return state
-      }
-      return {
-        ...state,
-        voteScore: action.voteScore
-      }
+        if (state && state.id && state.id !== action.id) {
+          return state
+        }
+        return {
+          ...state,
+          voteScore: action.voteScore
+        }
 
     case ActionTypes.SET_VOTE_COMMENT: //id
       
@@ -154,7 +176,7 @@ const post = (state = null, action) => {
           })
         }
 
-      case ActionTypes.ADD_COMMENT: //id
+    case ActionTypes.ADD_COMMENT: //id
        
         if (state.id !== action.parentId) {
           return post
@@ -196,6 +218,7 @@ const post = (state = null, action) => {
             }
           })
         }
+
     case ActionTypes.UPDATE_POST: //id, title, body
         const {title, body} = action
         if (state.id !== action.id) {
@@ -216,7 +239,7 @@ const post = (state = null, action) => {
 const posts = (state = [], action) => {
   switch(action.type) {
     case ActionTypes.LOAD_POSTS: //id, timestamp, title, body, author, category
-      return action.posts;
+      return action.posts
     
     case ActionTypes.ADD_POST: //id, timestamp, title, body, author, category
       return [
@@ -274,41 +297,7 @@ const posts = (state = [], action) => {
         }
         return {
           ...post,
-          commentCount: post.commentCount + 1,
-          comments: [
-            ...post.comments,
-            {
-              id: action.id,
-              timestamp: action.timestamp,
-              body: action.body,
-              author: action.author,
-              parentId: action.parentId,
-              voteScore: action.voteScore,
-              deleted: action.deleted,
-              parentDeleted: action.parentDeleted,
-            }
-          ]
-        }
-      })
-    
-    case ActionTypes.UPDATE_COMMENT: //id
-      return state.map(post => {
-        if (post.id !== action.parentId) {
-          return post
-        }
-        return {
-          ...post,
-          comments: post.comments.map(comment => {
-            if (comment.id !== action.id) {
-              return comment
-            }
-
-            return {
-              ...comment,
-              author: action.author,
-              body: action.body,
-            }
-          })
+          commentCount: post.commentCount + 1
         }
       })
 
@@ -321,16 +310,7 @@ const posts = (state = [], action) => {
 
         return {
           ...post,
-          commentCount: post.commentCount - 1,
-          comments: post.comments.map(comment => {
-            if (comment.id !== action.id) {
-              return comment
-            }
-            return {
-              ...comment,
-              deleted: true
-            }
-          })
+          commentCount: post.commentCount - 1
         }
       })
 
@@ -345,27 +325,6 @@ const posts = (state = [], action) => {
           voteScore: action.voteScore
         }
       })
-
-    case ActionTypes.SET_VOTE_COMMENT: //id
-      return state.map(post => {
-        if (post.id !== action.parentId) {
-          return post
-        }
-
-        return {
-          ...post,
-          comments: post.comments.map(comment => {
-            if (comment.id !== action.id) {
-              return comment
-            }
-
-            return {
-              ...comment,
-              voteScore: action.voteScore
-            }
-          })
-        }
-      }) 
 
     default: 
       return state;
@@ -384,6 +343,8 @@ const rootReducer = combineReducers({
   hidden_modal_post,
   hidden_modal_comment,
   isNewPost,
+  favorites,
+  readingLater,
   form: formReducer
 })
 
