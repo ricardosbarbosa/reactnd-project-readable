@@ -107,7 +107,7 @@ const post = (state = null, action) => {
 
     case ActionTypes.SET_VOTE: //id
        
-      if (state.id !== action.id) {
+      if (state && state.id && state.id !== action.id) {
         return state
       }
       return {
@@ -162,7 +162,7 @@ const post = (state = null, action) => {
         return {
           ...state,
           commentCount: state.commentCount + 1,
-          comments: [
+          comments: state.comments && [
             ...state.comments,
             {
               id: action.id,

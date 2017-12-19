@@ -8,7 +8,7 @@ import Menubar from './Menubar'
 import PostsView from '../views/PostsView'
 import PostView from '../views/PostView'
 import { Route, Redirect, Switch } from 'react-router-dom'
-
+import { compose } from 'redux'
 
 class App extends Component {
 
@@ -50,10 +50,10 @@ class App extends Component {
         </header>
         <div className="content">
           <Switch>
-            <Route exact path="/posts/" component={PostsView} />
-            <Route exact path="/posts/:category" component={PostsView} />
-            <Route exact path='/post/:post_id' component={PostView} />
-            <Redirect from="/" to="/posts"/>
+            <Route exact path="/" component={PostsView} />
+            <Route exact path="/:category" component={PostsView} />
+            <Route exact path='/:category/:post_id' component={PostView} />
+            <Redirect from="/" to="/"/>
           </Switch>
         </div>
         {this.renderErrorMessage()}
@@ -69,19 +69,9 @@ const mapStateToProps = (state, ownProps) => ({
   inputValue: ownProps.location.pathname.substring(1)
 })
 
+const mapDispatchToProps = { resetErrorMessage }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    resetErrorMessage: (data) => dispatch(resetErrorMessage(data))
-  }
-}
-
-export default withRouter(
-  connect(
-    mapStateToProps, 
-    mapDispatchToProps
-)(App))
-
-//<Route exact path='/posts/:category' render={({ match }) => (
-  //            <PostsView category={match.params.category}/>
-    //        )}/>
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(App)

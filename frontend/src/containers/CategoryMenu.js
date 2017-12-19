@@ -13,7 +13,7 @@ class CategoryMenu extends Component {
     }
     else {
       return (
-        <Menu to={`/posts/${filter}`} text={filter} ative={filter === category_filter} 
+        <Menu to={`/${filter}`} text={filter} ative={filter === category_filter} 
           onClick={(e) => {
             changeCategoryFilter({category_filter: filter})
             loadPosts(filter)
@@ -31,12 +31,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeCategoryFilter: (data) => dispatch(changeCategoryFilter(data)),
-    loadPosts: (data) => dispatch(loadPosts(data)),
-  }
-}
+const mapDispatchToProps = { changeCategoryFilter, loadPosts }
 
 export default connect(
   mapStateToProps,

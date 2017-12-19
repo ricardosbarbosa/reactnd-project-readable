@@ -1,23 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-
 import PostHeader from '../components/PostHeader'
-import VoteControl from '../components/VoteControl'
 import OrderBy from '../components/OrderBy'
-
-import { changeCategoryFilter, changeOrderPostsFilter, upVotePost, downVotePost, loadPosts } from '../actions'
+import { changeCategoryFilter, changeOrderPostsFilter, upVotePost, downVotePost, loadPosts, toggleModalPost, deletePost, isNewPost, setPost} from '../actions'
+import { compose } from 'redux'
+import { getVisiblePostsOrderedBy } from '../selectors'
 
 class PostsView extends Component {
 
   componentDidMount() {
-    const {loadPosts, changeCategoryFilter, match} = this.props
-    changeCategoryFilter({category_filter: match.params.category})
-    loadPosts(match.params.category)
+    const {loadPosts, changeCategoryFilter, match, categories, history} = this.props
+    
+    const checkCategories = categories.filter((category) => {
+      if (category.name === match.params.category) {
+        return category
+      }
+    })
+
+    if(checkCategories && checkCategories.length){   
+       // not empty 
+       changeCategoryFilter({category_filter: match.params.category})
+       loadPosts(match.params.category)
+    } else {
+       // empty
+       changeCategoryFilter({category_filter: null})
+       loadPosts(null)
+       history.push("/")
+    }
+    
   }
   
   render()  {
-    const {posts, order_posts_filter, changeOrderPostsFilter, upVotePost, downVotePost} = this.props
+    const {posts, order_posts_filter, changeOrderPostsFilter, upVotePost, downVotePost, history, isNewPost, deletePost, toggleModalPost,setPost} = this.props
     return (
         <div className="postss">
         
@@ -27,22 +42,30 @@ class PostsView extends Component {
             onChangeClick={(event) => {changeOrderPostsFilter({order_posts_filter: event.target.value}) }}
           />
           <div className="posts">
-            {posts.filter((post) => !post.deleted)
-            .sort((a, b) => a[order_posts_filter] < b[order_posts_filter])
-            .map( (post) => (
-              <div className='post' >
-                <VoteControl voteScore={post.voteScore} 
-                  onUpClick={(e) => {
-                      e.preventDefault()
-                      upVotePost({id: post.id} )
-                    }} 
-                    onDownClick={(e) => {
-                      e.preventDefault()
-                      downVotePost({id: post.id} )
-                    }}
-                    />
-                <PostHeader key={post.id} post={post}/>
-              </div>
+            {posts.map( (post) => (
+              <PostHeader 
+                key={post.id} 
+                post={post} 
+                onDeleteClick={(e) => {
+                    e.preventDefault();
+                    deletePost({id: post.id} )
+                    history.push('/')
+                  }} 
+                onEditClick={(e) => {
+                  e.preventDefault();
+                  setPost(post.id)
+                  isNewPost(false)
+                  toggleModalPost()
+                }}
+                onUpClick={(e) => {
+                  e.preventDefault()
+                  upVotePost({id: post.id} )
+                }} 
+                onDownClick={(e) => {
+                  e.preventDefault()
+                  downVotePost({id: post.id} )
+                }}
+                />
             ))}
           </div>
          
@@ -53,23 +76,17 @@ class PostsView extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    posts: state.posts,
+    // posts: state.posts.filter((post) => !post.deleted).sort((a, b) => a[ownProps.order_posts_filter] < b[ownProps.order_posts_filter]),
+    posts: getVisiblePostsOrderedBy(state),
+    categories: state.categories,
     order_posts_filter: state.order_posts_filter,
     category_filter: state.category_filter,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeCategoryFilter: (data) => dispatch(changeCategoryFilter(data)),
-    changeOrderPostsFilter: (data) => dispatch(changeOrderPostsFilter(data)),
-    upVotePost: (data) => dispatch(upVotePost(data)),
-    downVotePost: (data) => dispatch(downVotePost(data)),
-    loadPosts: (data) => dispatch(loadPosts(data)),
-  }
-}
+const mapDispatchToProps = {loadPosts, changeCategoryFilter, changeOrderPostsFilter, upVotePost, downVotePost, isNewPost, toggleModalPost, deletePost, setPost}
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsView))
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(PostsView)

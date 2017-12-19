@@ -1,18 +1,15 @@
 import React from 'react';
 import { Button,  FormGroup, Label, Input, FormText, FormFeedback, ModalFooter } from 'reactstrap';
-import { Field, Form, reduxForm} from 'redux-form'
+import { Field, reduxForm} from 'redux-form'
 import { addPost, updatePost } from '../actions'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import { SubmissionError } from 'redux-form'
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+// const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 class FormPost extends React.Component {
 
-
   submit = (values) => {
-    console.log('Form was submitted!!');
     const post = {
         id: values.id || uuid().split("-").join(""),
         timestamp: values.timestamp || Date.now(),
@@ -167,12 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addPost:  (data) => dispatch(addPost(data)),
-    updatePost: (data) => dispatch(updatePost(data)),
-  }
-}
+const mapDispatchToProps = { addPost, updatePost }
 
 export default connect(
   mapStateToProps,

@@ -21,7 +21,7 @@ class ModalPost extends React.Component {
 
 
   render() {
-    const {parentId, hidden_modal_post} = this.props
+    const { hidden_modal_post} = this.props
     return (
       <div>
         <a className='new-post' href="/" onClick={this.toggleAndIsNewPost}>New Post</a>
@@ -43,16 +43,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addPost:  (data) => dispatch(addPost(data)),
-    updatePost: (data) => dispatch(updatePost(data)),
-    // resetPost: (data) => dispatch(resetPost(data)),
-    setPost: (data) => dispatch(setPost(data)),
-    isNewPost: (data) => dispatch(isNewPost(data)),
-    toggleModalPost: (data) => dispatch(toggleModalPost(data)),
-  }
-}
+const mapDispatchToProps = {addPost, updatePost, setPost, isNewPost, toggleModalPost} 
 
 export default connect(
   mapStateToProps,

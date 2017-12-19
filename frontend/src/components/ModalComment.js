@@ -9,7 +9,6 @@ class ModalComment extends React.Component {
   toggle = (e) => {
     if (e)
       e.preventDefault()
-    console.log(this.props)
     this.props.setComment(null)
   }
 
@@ -36,14 +35,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addComment:  (data) => dispatch(addComment(data)),
-    updateComment: (data) => dispatch(updateComment(data)),
-    resetComment: (data) => dispatch(resetComment(data)),
-    setComment: (data) => dispatch(setComment(data)),
-  }
-}
+const mapDispatchToProps = {addComment, updateComment, resetComment, setComment }
 
 export default connect(
   mapStateToProps,

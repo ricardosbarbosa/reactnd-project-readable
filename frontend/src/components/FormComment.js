@@ -4,13 +4,11 @@ import { Field, Form, reduxForm} from 'redux-form'
 import { addComment, updateComment , setComment} from '../actions'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import { SubmissionError } from 'redux-form'
 
 class FormComment extends React.Component {
 
   submit = (values) => {
     const {parentId} = this.props
-    console.log('Form was submitted!!');
     const comment = {
         id: values.id || uuid().split("-").join(""),
         timestamp: values.timestamp || Date.now(),
@@ -35,7 +33,7 @@ class FormComment extends React.Component {
   }
 
   render() {
-    const { handleSubmit, pristine, reset, submitting, category_filter } = this.props
+    const { handleSubmit, pristine, submitting } = this.props
     return (
       <Form onSubmit={handleSubmit(this.submit)}>
         <Field name="author" component={renderField} type="text" placeholder="Author" label="Author"/>
@@ -103,13 +101,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addComment:  (data) => dispatch(addComment(data)),
-    updateComment: (data) => dispatch(updateComment(data)),
-    setComment: (data) => dispatch(setComment(data)),
-  }
-}
+const mapDispatchToProps = { addComment, updateComment, setComment }
 
 export default connect(
   mapStateToProps,

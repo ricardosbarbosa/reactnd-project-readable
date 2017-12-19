@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 import CategoryMenu from './CategoryMenu'
 import Menu from '../components/Menu'
 import { changeCategoryFilter, loadCategories, loadPosts } from '../actions'
-// import { Link } from 'react-router-dom'
 import ModalPost from '../components/ModalPost'
-import FormPost from '../components/FormPost'
 
 class Menubar extends Component {
 
@@ -19,7 +17,7 @@ class Menubar extends Component {
       <div>
         <ModalPost />
         <div className="Menubar">
-            <Menu to={`/posts/`} text='Home' active={category_filter === null} 
+            <Menu to={`/`} text='Home' active={category_filter === null} 
               onClick={() => {
                 changeCategoryFilter({category_filter: null})
                 loadPosts(null)
@@ -41,13 +39,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeCategoryFilter: (data) => dispatch(changeCategoryFilter(data)),
-    loadCategories: (data) => dispatch(loadCategories(data)),
-    loadPosts: (data) => dispatch(loadPosts(data)),
-  }
-}
+const mapDispatchToProps = { changeCategoryFilter, loadCategories, loadPosts }
 
 export default connect(
   mapStateToProps,
