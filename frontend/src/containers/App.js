@@ -9,9 +9,23 @@ import PostsView from '../views/PostsView'
 import PostView from '../views/PostView'
 import { Route, Redirect, Switch } from 'react-router-dom'
 import { compose } from 'redux'
+import * as firebase from 'firebase'
 
 class App extends Component {
 
+  componentWillMount() {
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDNCRRw9roYNP3XJ-iFtlh9d98uZ04UMCk",
+      authDomain: "udacityreading.firebaseapp.com",
+      databaseURL: "https://udacityreading.firebaseio.com",
+      projectId: "udacityreading",
+      storageBucket: "udacityreading.appspot.com",
+      messagingSenderId: "1098260523335"
+      };
+
+    firebase.initializeApp(config);
+  }
   static propTypes = {
     // Injected by React Redux
     errorMessage: PropTypes.string,

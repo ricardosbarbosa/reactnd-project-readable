@@ -2,13 +2,27 @@ import * as ActionTypes from '../actions'
 import { combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'
 import 'font-awesome/css/font-awesome.min.css';
+import * as firebase from 'firebase'
 
 // Extras
+const user = (state = null, action) => {
+  switch(action.type) {
+    case ActionTypes.LOGIN: //id
+     return action.user
+      
+    case ActionTypes.LOGOUT: //id
+     return null
+      
+    default: 
+      return state;
+  }
+}
 const favorites = (state = [], action) => {
-    const ids = state.map( favorite => { return favorite.id })
-    const index = action && action.post && ids.indexOf(action.post.id)
+    
     switch(action.type) {
-      case ActionTypes.FAVORITE: //id, timestamp, title, body, author, category
+      case ActionTypes.FAVORITE: {//id, timestamp, title, body, author, category
+        const ids = state.map( favorite => { return favorite.id })
+        const index = action && action.post && ids.indexOf(action.post.id)
         if (index > -1) {
           return [
             ...state.slice(0, index),
@@ -21,12 +35,22 @@ const favorites = (state = [], action) => {
             action.post
           ];
         }
+      }
 
-      case ActionTypes.REMOVE_FROM_FAVORITE: //id
-       return [
-          ...state.slice(0, index),
-          ...state.slice(index + 1)
-        ];
+      case ActionTypes.REMOVE_FROM_FAVORITE: { //id
+        const ids = state.map( favorite => { return favorite.id })
+        const index = action && action.post && ids.indexOf(action.post.id)
+        return [
+            ...state.slice(0, index),
+            ...state.slice(index + 1)
+          ];
+      }
+
+      case ActionTypes.LOAD_FAVORITE: //id
+       return action.favorites ? action.favorites : state
+        
+      case ActionTypes.RESET_FAVORITE: //id
+       return []
         
       default: 
         return state;
@@ -34,10 +58,11 @@ const favorites = (state = [], action) => {
 }
 
 const readingLater = (state = [], action) => {
-    const ids = state.map( reading_post => { return reading_post.id })
-    const index = action && action.post && ids.indexOf(action.post.id)
     switch(action.type) {
-      case ActionTypes.READING_LIST: //id, timestamp, title, body, author, category
+      case ActionTypes.READING_LIST: { //id, timestamp, title, body, author, category
+        const ids = state.map( reading_post => { return reading_post.id })
+        const index = action && action.post && ids.indexOf(action.post.id)
+    
         if (index > -1) {
           return [
             ...state.slice(0, index),
@@ -50,14 +75,23 @@ const readingLater = (state = [], action) => {
             action.post
           ];
         }
-        
+      }
 
-      case ActionTypes.REMOVE_FROM_READING_LIST: //id
+      case ActionTypes.REMOVE_FROM_READING_LIST: {//id
+        const ids = state.map( reading_post => { return reading_post.id })
+        const index = action && action.post && ids.indexOf(action.post.id)
+    
         return [
           ...state.slice(0, index),
           ...state.slice(index + 1)
         ];
+      }
+
+      case ActionTypes.LOAD_READING_LIST: //id
+        return action.readingList ? action.readingList : state
         
+      case ActionTypes.RESET_READING_LIST: //id
+       return []
       default: 
         return state;
     }
@@ -429,6 +463,7 @@ const rootReducer = combineReducers({
   isNewPost,
   favorites,
   readingLater,
+  user,
   form: formReducer
 })
 

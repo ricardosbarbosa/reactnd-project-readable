@@ -1,10 +1,17 @@
 import * as ReadApi from '../utils/Api'
+import * as firebase from 'firebase'
 
 //Extras
+export const LOGIN = "LOGIN"
+export const LOGOUT = "LOGOUT"
 export const REMOVE_FROM_FAVORITE = "REMOVE_FROM_FAVORITE"
 export const REMOVE_FROM_READING_LIST = "REMOVE_FROM_READING_LIST"
 export const FAVORITE = "FAVORITE"
 export const READING_LIST = "READING_LIST"
+export const LOAD_FAVORITE = "LOAD_FAVORITE"
+export const LOAD_READING_LIST = "LOAD_READING_LIST"
+export const RESET_FAVORITE = "RESET_FAVORITE"
+export const RESET_READING_LIST = "RESET_READING_LIST"
 
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
 
@@ -35,25 +42,25 @@ export const SET_VOTE = 'SET_VOTE' //id
 export const SET_VOTE_COMMENT = 'SET_VOTE_COMMENT' //id
 
 //extras
-export const favorite = (post) => ({
-  type: FAVORITE,
-  post
-})
+// export const favorite = (post) => ({
+//   type: FAVORITE,
+//   post
+// })
 
-export const removeFromFavorite = (id) => ({
-  type: REMOVE_FROM_FAVORITE,
-  id
-})
+// export const removeFromFavorite = (id) => ({
+//   type: REMOVE_FROM_FAVORITE,
+//   id
+// })
 
-export const reading = (post) => ({
-  type: READING_LIST,
-  post
-})
+// export const reading = (post) => ({
+//   type: READING_LIST,
+//   post
+// })
 
-export const removeFromReadingLater = (id) => ({
-  type: REMOVE_FROM_READING_LIST,
-  id
-})
+// export const removeFromReadingLater = (id) => ({
+//   type: REMOVE_FROM_READING_LIST,
+//   id
+// })
 
 // Resets the currently visible error message.
 export const resetErrorMessage = () => ({
@@ -121,6 +128,136 @@ export function deletePost ({ id }) {
   };
 }
 
+export function loginFirebase () {
+  return dispatch => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+
+      console.log(token)
+      console.log(user)
+      
+      dispatch({ type: LOGIN, user })
+      dispatch(loadFavoritesFirebase(user))
+      dispatch(loadReadingListFirebase(user))
+      // ...
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+
+  }
+}
+
+export function logoutFirebase () {
+  return dispatch => {
+
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      dispatch({ type: LOGOUT })
+      dispatch({ type: RESET_FAVORITE })
+      dispatch({ type: RESET_READING_LIST })
+    }).catch(function(error) {
+      // An error happened.
+    });
+
+  }
+}
+
+export function favoritesFirebase (user, post) {
+  return dispatch => {
+    if (!user) return
+
+    const firebaseRef = firebase.database().ref(user.uid).child("favorites")
+
+    firebaseRef.once('value').then( snap => {
+      if (!snap.hasChild(post.id)) {
+        firebaseRef.child(post.id).set({
+          ...post
+        }).then(() => {
+          console.log('Write succeeded!');
+          dispatch({ type: FAVORITE, post })
+        });
+      }
+      else {
+        firebaseRef.child(post.id).remove().then(() => {
+          console.log('Write succeeded!');
+          dispatch({ type: FAVORITE, post })
+        });
+      }
+
+    })
+    
+  }
+}
+
+export function readingFirebase (user, post) {
+  return dispatch => {
+    if (!user) return
+
+    const firebaseRef = firebase.database().ref(user.uid).child("reading_list")
+    firebaseRef.once('value').then( snap => {
+      if (!snap.hasChild(post.id)) {
+        firebaseRef.child(post.id).set({
+          ...post
+        }).then(() => {
+          console.log('Write succeeded!');
+          dispatch({ type: READING_LIST, post })
+        });
+      }
+      else {
+        firebaseRef.child(post.id).remove().then(() => {
+          console.log('Write succeeded!');
+          dispatch({ type: READING_LIST, post })
+        });
+      }
+
+    })
+    
+  }
+}
+
+export function loadFavoritesFirebase (user) {
+  return dispatch => {
+    if (!user) return
+
+    const firebaseRef = firebase.database().ref(user.uid).child("favorites")
+    firebaseRef.once('value').then( snap => {
+      const favorites = []
+      snap.forEach((item) => {
+        favorites.push(item.val());
+      });
+      dispatch({ type: LOAD_FAVORITE, favorites })
+    })
+    
+  }
+}
+
+export function loadReadingListFirebase (user) {
+  return dispatch => {
+
+    if (!user) return
+
+    const firebaseRef = firebase.database().ref(user.uid).child("reading_list")
+    firebaseRef.once('value').then( snap => {
+      const readingList = []
+      snap.forEach((item) => {
+        readingList.push(item.val());
+      });
+      dispatch({ type: LOAD_READING_LIST, readingList })
+    })
+    
+  }
+}
 
 
 // export const toggleModalComment = () => {

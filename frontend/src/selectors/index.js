@@ -10,8 +10,8 @@ const getReadingList = (state) => state.readingLater
 export const getVisiblePosts = createSelector(
   [ getPosts, getFavorites, getReadingList, getCategoryFilter],
   ( posts, favorites, readingList, category_filter) => {
-    const idsFavorites = favorites.map(p => {return p.id})
-    const idsReading = readingList.map(p => {return p.id})
+    const idsFavorites = favorites && favorites.map(p => {return p.id})
+    const idsReading = readingList && readingList.map(p => {return p.id})
 
     if (category_filter === 'favorites') {
       return favorites.map(p => { return { ...p, favorite: true, reading: idsReading.indexOf(p.id) > -1 }})
@@ -19,12 +19,11 @@ export const getVisiblePosts = createSelector(
     if (category_filter === 'reading-list') {
       return readingList.map(p => { return { ...p, favorite: idsFavorites.indexOf(p.id) > -1 , reading: true }})
     }
-
     
     return posts.filter((post) => !post.deleted).map(p => { return {
       ...p, 
-      favorite: idsFavorites.indexOf(p.id) > -1 ,
-      reading: idsReading.indexOf(p.id) > -1 
+      favorite: idsFavorites && idsFavorites.indexOf(p.id) > -1 ,
+      reading: idsReading && idsReading.indexOf(p.id) > -1 
     }})
   }
 )

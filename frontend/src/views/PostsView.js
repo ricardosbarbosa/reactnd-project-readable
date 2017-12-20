@@ -10,6 +10,7 @@ import { getVisiblePostsOrderedBy } from '../selectors'
 class PostsView extends Component {
 
   componentDidMount() {
+
     const {loadPosts, changeCategoryFilter, match, categories, history} = this.props
     
     const checkCategories = categories.filter((category) => {
